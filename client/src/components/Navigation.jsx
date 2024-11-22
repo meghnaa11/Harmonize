@@ -10,19 +10,11 @@ const Navigation = () => {
 };
 
 const NavigationAuth = () => {
+  const { currentUser } = useContext(AuthContext);
   return (
     <nav className="navigation">
-      <ul>
-        <li>
-          <NavLink to="/">Landing</NavLink>
-        </li>
-        <li>
-          <NavLink to="/home">Home</NavLink>
-        </li>
-        <li>
-          <SignOutButton></SignOutButton>
-        </li>
-      </ul>
+      <p>You are currently logged in as: {currentUser.displayName}</p>
+      <SignOutButton></SignOutButton>
     </nav>
   );
 };
@@ -30,14 +22,11 @@ const NavigationAuth = () => {
 const NavigationNonAuth = () => {
   return (
     <nav className="navigation">
+      <p>You are currently not logged in.</p>
       <ul>
-        <li>
-          <NavLink to="/">Landing</NavLink>
-        </li>
         <li>
           <NavLink to="/signup">Sign-up</NavLink>
         </li>
-
         <li>
           <NavLink to="/signin">Sign-In</NavLink>
         </li>
