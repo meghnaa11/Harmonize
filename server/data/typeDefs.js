@@ -1,6 +1,12 @@
 // For reviews, we have to decide what kind of things users can review (artist, album, and/or track)
 
 export const typeDefs = `#graphql
+    type Query {
+        users: [User]
+        reviews: [Review]
+        albums: [Album]
+    }
+
     type User {
         _id: String!
         username: String!
@@ -47,7 +53,7 @@ export const typeDefs = `#graphql
         members: [User!]!
         messages: [Message]!
     }
-        
+
     type Album {
         _id: String!,
         title: String!
