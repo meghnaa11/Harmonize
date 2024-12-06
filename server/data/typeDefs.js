@@ -4,20 +4,21 @@ export const typeDefs = `#graphql
     type Query {
         users: [User]
         reviews: [Review]
-        albums: [Album]
+        getGroupChatsByMembers()
+        searchTrackByName(searchTerm:String!): [Track]!
+    }
+
+    type Mutation {
+        
     }
 
     type User {
         _id: String!
         username: String!
         email: String!
-        password: String!
+        reviews: [Review]!
         following: [User]!
         followers: [User]!
-        musicPreferences: [String]!
-        spotify: String
-        appleMusic: String
-        preferredAccount: String
         groupChats: [GroupChat]!
     }
 
@@ -26,17 +27,7 @@ export const typeDefs = `#graphql
         user: User!
         title: String!
         content: String!
-        album: Album
         track: Track
-        artist: Artist
-        comments: [Comment]!
-    }
-    
-    type Comment {
-        _id: String!,
-        review: Review!
-        user: User!
-        content: String!
     }
     
     type Message {
@@ -53,32 +44,14 @@ export const typeDefs = `#graphql
         members: [User!]!
         messages: [Message]!
     }
-
-    type Album {
-        _id: String!,
-        title: String!
-        artist: Artist!
-        tracklist: [Track!]!
-        releaseDate: String!
-        genre: String!
-    }
     
     type Track {
         _id: String!,
         title: String!
-        artist: Artist!
+        artist: String!
         length: Int!
         genre: String!
-        album: Album
-    }
-    
-    type Artist {
-        _id: String!,
-        name: String!
-        albums: [Album]!
-        tracks: [Track]!
-    }
-
-    
+        album: String
+    }    
 
 `;
