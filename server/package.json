@@ -2,13 +2,21 @@
   "name": "harmonize",
   "version": "1.0.0",
   "main": "app.js",
+  "type": "module",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "express": "^4.21.1"
+    "apollo-server": "^3.13.0",
+    "dotenv": "^16.4.5",
+    "elasticsearch": "^16.7.3",
+    "express": "^4.21.1",
+    "firebase-admin": "^13.0.1",
+    "graphql": "^16.9.0",
+    "socket.io": "^4.8.1"
   }
 }
