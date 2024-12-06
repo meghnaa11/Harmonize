@@ -1,15 +1,16 @@
-// For reviews, we have to decide what kind of things users can review (artist, album, and/or track)
-
 export const typeDefs = `#graphql
     type Query {
         users: [User]
         reviews: [Review]
-        getGroupChatsByMembers()
+        getUserById(userId:String!): User!
+        getReviewById(reviewId:String!): Review!
+        getTrackById(trackId:String!): Track!
         searchTrackByName(searchTerm:String!): [Track]!
     }
 
     type Mutation {
-        
+        createUser(uuid:String!, username: String!, email:String!)
+        createReview(title:String!, content:String!, userId:String!, trackId:String!)
     }
 
     type User {
@@ -17,9 +18,6 @@ export const typeDefs = `#graphql
         username: String!
         email: String!
         reviews: [Review]!
-        following: [User]!
-        followers: [User]!
-        groupChats: [GroupChat]!
     }
 
     type Review {
@@ -27,22 +25,7 @@ export const typeDefs = `#graphql
         user: User!
         title: String!
         content: String!
-        track: Track
-    }
-    
-    type Message {
-        _id: String!,
-        sender: User!,
-        groupChat: GroupChat!
-        content: String!
-        timestamp: String!
-    }
-    
-    type GroupChat {
-        _id: String!
-        name: String!
-        members: [User!]!
-        messages: [Message]!
+        track: Track!
     }
     
     type Track {
@@ -53,5 +36,4 @@ export const typeDefs = `#graphql
         genre: String!
         album: String
     }    
-
 `;

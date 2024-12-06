@@ -15,6 +15,7 @@ const NavigationAuth = () => {
     <nav className="navigation">
       <p>You are currently logged in as: {currentUser.displayName}</p>
       <SignOutButton></SignOutButton>
+      <NavLink to="/secret">Secret</NavLink>
     </nav>
   );
 };
@@ -29,6 +30,9 @@ const NavigationNonAuth = () => {
         </li>
         <li>
           <NavLink to="/signin">Sign-In</NavLink>
+        </li>
+        <li>
+          <NavLink to="/secret">Secret</NavLink>
         </li>
       </ul>
     </nav>

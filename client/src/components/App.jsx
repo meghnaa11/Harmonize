@@ -13,12 +13,16 @@ function App() {
     <AuthProvider>
       <div className="App">
         <header className="App-header card">
+          <h1>Harmonize</h1>
           <Navigation />
         </header>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
+          <PrivateRoute>
+            <Route path="/secret" element={<Secret />} />
+          </PrivateRoute>
         </Routes>
       </div>
     </AuthProvider>
