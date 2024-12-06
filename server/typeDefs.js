@@ -1,7 +1,7 @@
 export const typeDefs = `#graphql
     type Query {
-        users: [User]
-        reviews: [Review]
+        users: [User]!
+        reviews: [Review]!
         getUserById(userId:String!): User!
         getReviewById(reviewId:String!): Review!
         getTrackById(trackId:String!): Track!
@@ -9,8 +9,8 @@ export const typeDefs = `#graphql
     }
 
     type Mutation {
-        createUser(uuid:String!, username: String!, email:String!)
-        createReview(title:String!, content:String!, userId:String!, trackId:String!)
+        createUser(uuid:String!, username: String!, email:String!): User!
+        createReview(title:String!, content:String!, userId:String!, trackId:String!): Review!
     }
 
     type User {
@@ -35,5 +35,6 @@ export const typeDefs = `#graphql
         length: Int!
         genre: String!
         album: String
+        imageUrl: String!
     }    
 `;
