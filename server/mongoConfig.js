@@ -30,5 +30,5 @@ const getCollectionFn = (collection) => {
   };
 };
 
-export const authors = getCollectionFn("users");
-export const books = getCollectionFn("reviews");
+export const users = getCollectionFn("users");
+export const reviews = getCollectionFn("reviews");
