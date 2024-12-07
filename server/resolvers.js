@@ -114,7 +114,7 @@ export const resolvers = {
       };
       let inserted = await ucol.insertOne(userObj);
       if (!inserted) throw new GraphQLError("Failed to create user.");
-      return inserted;
+      return userObj;
     },
     createReview: async (_, args) => {
       let rcol = await reviews();
@@ -151,7 +151,7 @@ export const resolvers = {
         );
       }
 
-      reviewObj = {
+      let reviewObj = {
         _id: uuid(),
         title: args.title,
         content: args.content,
@@ -164,7 +164,7 @@ export const resolvers = {
         throw new GraphQLError(
           "Could not create review: Internal server error."
         );
-      return inserted;
+      return reviewObj;
     },
   },
 
