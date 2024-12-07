@@ -5,9 +5,10 @@ import Navigation from "./Navigation";
 import SignIn from "./SignIn";
 import SignUp from "./SignUp";
 import Home from "./Home";
+import Reviews from "./Reviews";
+import OneReview from "./OneReview";
 import { AuthProvider } from "../context/AuthContext";
 import PrivateRoute from "./PrivateRoute";
-import Secret from "./Secret";
 
 function App() {
   return (
@@ -21,6 +22,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/reviews" element={<Reviews />} />
+          <Route path="/reviews/:id" element={<OneReview />} />
         </Routes>
       </div>
     </AuthProvider>

@@ -12,6 +12,7 @@ const GET_REVIEWS = gql`
       track {
         _id
         title
+        artist
         imageUrl
       }
     }

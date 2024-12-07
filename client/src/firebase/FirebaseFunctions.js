@@ -11,6 +11,7 @@ import {
   EmailAuthProvider,
   reauthenticateWithCredential,
 } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 async function doCreateUserWithEmailAndPassword(email, password, displayName) {
   const auth = getAuth();
@@ -48,6 +49,8 @@ async function doPasswordReset(email) {
 async function doSignOut() {
   let auth = getAuth();
   await signOut(auth);
+  let navigate = useNavigate();
+  navigate("/");
 }
 
 export {
