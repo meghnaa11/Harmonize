@@ -10,8 +10,10 @@ async function getSpotifyAccessToken() {
 
   // Logic for checking if token is nonexistent or expired.
   try {
-    tokenInfo = JSON.parse(fs.readFileSync("./server/tokenInfo.json", "utf-8"));
+    tokenInfo = JSON.parse(fs.readFileSync("./tokenInfo.json", "utf-8"));
+    console.log(tokenInfo);
   } catch (err) {
+    console.log(err);
     console.log("No existing token info, fetching new token");
     tokenInfo = null;
   }
@@ -24,6 +26,7 @@ async function getSpotifyAccessToken() {
   const tokenUrl = "https://accounts.spotify.com/api/token";
   const clientId = process.env.SPOTIFY_CLIENT_ID;
   const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
+  console.log(clientId, clientSecret);
 
   const credentials = Buffer.from(`${clientId}:${clientSecret}`).toString(
     "base64"
@@ -49,7 +52,7 @@ async function getSpotifyAccessToken() {
       token: response.data.access_token,
     };
     fs.writeFileSync(
-      "./server/tokenInfo.json",
+      "./tokenInfo.json",
       JSON.stringify(newTokenInfo, null, 2),
       "utf-8"
     );
