@@ -1,7 +1,8 @@
 import { GraphQLError } from "graphql";
-import { users, reviews } from "./mongoConfig";
+import { users, reviews } from "./mongoConfig.js";
 import axios from "axios";
-const spotifyKey = process.env.SPOTIFY_KEY;
+import qs from "qs";
+import getSpotifyAccessToken from "./auth.js";
 
 export const resolvers = {
   // type Query {
@@ -43,6 +44,7 @@ export const resolvers = {
     },
     getTrackById: async (_, args) => {
       try {
+        let spotifyKey = await getSpotifyAccessToken();
         const response = await axios.get(
           `https://api.spotify.com/v1/tracks/${args.trackId}`,
           {
@@ -65,13 +67,14 @@ export const resolvers = {
       }
     },
     searchTracksByName: async (_, args) => {
+      let spotifyKey = await getSpotifyAccessToken();
       try {
         const response = await axios.get(`https://api.spotify.com/v1/search`, {
           headers: {
             Authorization: `Bearer ${spotifyKey}`,
           },
           params: {
-            q: args.trackName,
+            q: args.searchTerm,
             type: "track",
           },
         });
@@ -88,7 +91,7 @@ export const resolvers = {
         return tracksObj;
       } catch (error) {
         throw new GraphQLError(
-          `Failed to search tracks with name:${args.trackName}`
+          `Failed to search tracks with name:${args.searchTerm}`
         );
       }
     },
@@ -127,8 +130,6 @@ export const resolvers = {
   //     _id: String!,
   //     title: String!
   //     artist: String!
-  //     length: Int!
-  //     genre: String!
   //     album: String
   // }
 };
