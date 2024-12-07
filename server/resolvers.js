@@ -1,8 +1,9 @@
 import { GraphQLError } from "graphql";
 import { users, reviews } from "./mongoConfig.js";
 import axios from "axios";
-import qs from "qs";
 import getSpotifyAccessToken from "./auth.js";
+import * as v from "./validation.js";
+import { v4 as uuid } from "uuid";
 
 export const resolvers = {
   // type Query {
@@ -63,7 +64,9 @@ export const resolvers = {
         };
         return trackObj;
       } catch (error) {
-        throw new GraphQLError(`Failed to find track with id:${args.trackId}`);
+        throw new GraphQLError(
+          `Failed to find track with id:${args.trackId}, msg=${error}`
+        );
       }
     },
     searchTracksByName: async (_, args) => {
@@ -102,8 +105,67 @@ export const resolvers = {
   //     createReview(title:String!, content:String!, userId:String!, trackId:String!): Review!
   // }
   Mutation: {
-    createUser: async (_, args) => {},
-    createReview: async (_, args) => {},
+    createUser: async (_, args) => {
+      let ucol = await users();
+      userObj = {
+        _id: args.userId,
+        email: args.email,
+        username: args.username,
+      };
+      let inserted = await ucol.insertOne(userObj);
+      if (!inserted) throw new GraphQLError("Failed to create user.");
+      return inserted;
+    },
+    createReview: async (_, args) => {
+      let rcol = await reviews();
+      args.title = v.vTitle(args.title);
+      args.content = v.vContent(args.content);
+
+      //Make sure user exists.
+      let ucol = await users();
+      let user = await ucol.findOne({ _id: args.userId });
+      if (!user)
+        throw new GraphQLError(
+          `Could not create review: Failed to find user with id:${args.userId}`
+        );
+
+      //Make sure track exists.
+      try {
+        let spotifyKey = await getSpotifyAccessToken();
+        const response = await axios.get(
+          `https://api.spotify.com/v1/tracks/${args.trackId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${spotifyKey}`,
+            },
+          }
+        );
+        let trackData = response.data;
+        if (!trackData)
+          throw new GraphQLError(
+            `Could not create review: Failed to find track with id:${args.trackId}`
+          );
+      } catch (error) {
+        throw new GraphQLError(
+          `Could not create review: Internal server error while looking for track with id:${args.trackId}`
+        );
+      }
+
+      reviewObj = {
+        _id: uuid(),
+        title: args.title,
+        content: args.content,
+        userId: args.userId,
+        trackId: args.trackId,
+      };
+
+      let inserted = await rcol.insertOne(reviewObj);
+      if (!inserted)
+        throw new GraphQLError(
+          "Could not create review: Internal server error."
+        );
+      return inserted;
+    },
   },
 
   //   type User {
@@ -113,7 +175,15 @@ export const resolvers = {
   //     reviews: [Review]!
   // }
   User: {
-    reviews: async (parentValue) => {},
+    reviews: async (parentValue) => {
+      let rcol = await reviews();
+      let userReviews = await rcol.find({ userId: parentValue._id }).toArray();
+      if (!userReviews)
+        throw new GraphQLError(
+          `Failed to find reviews for user with id: ${parentValue._id}`
+        );
+      return userReviews;
+    },
   },
   // type Review {
   //     _id: String!,
@@ -123,8 +193,41 @@ export const resolvers = {
   //     track: Track!
   // }
   Review: {
-    user: async (parentValue) => {},
-    track: async (parentValue) => {},
+    user: async (parentValue) => {
+      let ucol = await users();
+      let user = await ucol.findOne({ _id: parentValue.userId });
+      if (!user)
+        throw new GraphQLError(
+          `Failed to find user for review with id: ${parentValue._id}`
+        );
+      return user;
+    },
+    track: async (parentValue) => {
+      try {
+        let spotifyKey = await getSpotifyAccessToken();
+        const response = await axios.get(
+          `https://api.spotify.com/v1/tracks/${parentValue.trackId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${spotifyKey}`,
+            },
+          }
+        );
+        let trackData = response.data;
+        let trackObj = {
+          _id: trackData.id,
+          title: trackData.name,
+          artist: trackData.artists[0].name,
+          album: trackData.album.name,
+          imageUrl: trackData.album.images[0].url,
+        };
+        return trackObj;
+      } catch (error) {
+        throw new GraphQLError(
+          `Failed to find track for review with id:${parentValue._id}`
+        );
+      }
+    },
   },
   // type Track {
   //     _id: String!,
