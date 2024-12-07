@@ -7,6 +7,7 @@ import SignUp from "./SignUp";
 import Home from "./Home";
 import { AuthProvider } from "../context/AuthContext";
 import PrivateRoute from "./PrivateRoute";
+import Secret from "./Secret";
 
 function App() {
   return (
