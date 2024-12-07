@@ -5,7 +5,10 @@ import { Route, Routes } from "react-router-dom";
 function App() {
   return (
     <>
-      <p>This is the home page.</p>
+      <p>
+        Welcome to Harmonize, a website for sharing your track reviews and
+        connecting with others!
+      </p>
     </>
   );
 }

@@ -5,6 +5,7 @@ import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 
 import fbConfig from "./firebase/FirebaseConfig";
+console.log(fbConfig);
 import { initializeApp } from "firebase/app";
 
 const app = initializeApp(fbConfig);

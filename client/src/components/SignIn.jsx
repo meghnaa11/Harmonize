@@ -37,7 +37,7 @@ function SignIn() {
   return (
     <div>
       <div className="card">
-        <h1>Log-In</h1>
+        <h1>Sign-In</h1>
         <form className="form" onSubmit={handleLogin}>
           <div className="form-group">
             <label>

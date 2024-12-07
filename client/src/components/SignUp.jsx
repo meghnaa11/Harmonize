@@ -35,7 +35,7 @@ function SignUp() {
       <form onSubmit={handleSignUp}>
         <div className="form-group">
           <label>
-            Name:
+            Username:
             <br />
             <input
               className="form-control"

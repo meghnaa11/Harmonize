@@ -21,9 +21,6 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
-          <PrivateRoute>
-            <Route path="/secret" element={<Secret />} />
-          </PrivateRoute>
         </Routes>
       </div>
     </AuthProvider>
