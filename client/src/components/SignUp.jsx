@@ -25,7 +25,7 @@ function SignUp() {
   };
 
   if (currentUser) {
-    return <Navigate to="/home" />;
+    return <Navigate to="/" />;
   }
 
   return (
@@ -35,7 +35,7 @@ function SignUp() {
       <form onSubmit={handleSignUp}>
         <div className="form-group">
           <label>
-            Name:
+            Username:
             <br />
             <input
               className="form-control"
