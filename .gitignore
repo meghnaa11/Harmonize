@@ -7,6 +7,13 @@
 /.pnp
 .pnp.js
 
+# keys
+.env
+
+#logs
+*.log
+logs/
+
 # testing
 /coverage
 
@@ -23,3 +30,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+FirebaseAdminSDK.json
+tokenInfo.json
