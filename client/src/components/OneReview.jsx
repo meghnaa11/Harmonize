@@ -18,7 +18,7 @@ function App() {
     body = <p>There was an error: {error.message}</p>;
   } else if (data) {
     let { getReviewById: review } = data;
-    console.log(data);
+    // console.log(data);
     body = (
       <>
         {/* {JSON.stringify(reviews)} */}

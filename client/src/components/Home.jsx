@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-
 import "../App.css";
 import { AuthContext } from "../context/AuthContext";
 import { Route, Routes } from "react-router-dom";
