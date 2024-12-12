@@ -23,7 +23,7 @@ async function doCreateUserWithEmailAndPassword(email, password, displayName) {
 async function doChangePassword(email, oldPassword, newPassword) {
   const auth = getAuth();
   let credential = EmailAuthProvider.credential(email, oldPassword);
-  console.log(credential);
+  // console.log(credential);
   await reauthenticateWithCredential(auth.currentUser, credential);
 
   await updatePassword(auth.currentUser, newPassword);

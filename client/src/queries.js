@@ -150,6 +150,27 @@ const CREATE_USER = gql`
   }
 `;
 
+const GET_TRACK_REVIEWS = gql`
+  query GetTrackReviews($trackId: String!) {
+    getTrackReviews(trackId: $trackId) {
+      _id
+      user {
+        username
+        _id
+      }
+      title
+      content
+      track {
+        _id
+        title
+        artist
+        album
+        imageUrl
+      }
+    }
+  }
+`;
+
 let exported = {
   GET_REVIEWS,
   GET_REVIEW_BY_ID,
@@ -159,6 +180,7 @@ let exported = {
   GET_TRACK_BY_ID,
   CREATE_REVIEW,
   CREATE_USER,
+  GET_TRACK_REVIEWS,
 };
 
 export default exported;

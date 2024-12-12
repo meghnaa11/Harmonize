@@ -28,7 +28,7 @@ function App() {
               <h4>
                 A review of "{review.track.title}" by {review.track.artist}
               </h4>
-              <img src={review.track.imageUrl} />
+              <img src={review.track.imageUrl} className="art" />
             </li>
           ))}
         </ul>

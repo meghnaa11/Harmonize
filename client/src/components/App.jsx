@@ -7,6 +7,7 @@ import SignUp from "./SignUp";
 import Home from "./Home";
 import Reviews from "./Reviews";
 import OneReview from "./OneReview";
+import OneTrack from "./OneTrack";
 import { AuthProvider } from "../context/AuthContext";
 import PrivateRoute from "./PrivateRoute";
 
@@ -24,6 +25,7 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/reviews" element={<Reviews />} />
           <Route path="/reviews/:id" element={<OneReview />} />
+          <Route path="/track/:id" element={<OneTrack />} />
         </Routes>
       </div>
     </AuthProvider>
