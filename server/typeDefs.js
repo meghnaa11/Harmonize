@@ -4,6 +4,7 @@ export const typeDefs = `#graphql
         reviews: [Review]!
         getUserById(userId:String!): User!
         getReviewById(reviewId:String!): Review!
+        getTrackReviews(trackId:String!): [Review]!
         getTrackById(trackId:String!): Track!
         searchTracksByName(searchTerm:String!): [Track]!
     }
