@@ -68,7 +68,6 @@ export const resolvers = {
           _id: trackData.id,
           title: trackData.name,
           artist: trackData.artists[0].name,
-          album: trackData.album.name,
           imageUrl: trackData.album.images[0].url,
         };
         return trackObj;
@@ -96,7 +95,6 @@ export const resolvers = {
           _id: track.id,
           title: track.name,
           artist: track.artists[0].name,
-          album: track.album.name,
           imageUrl: track.album.images[0].url,
         }));
 
@@ -124,6 +122,7 @@ export const resolvers = {
           title: albumData.name,
           artist: albumData.artists[0].name,
           imageUrl: albumData.images[0].url,
+          trackListUrl: albumData.tracks.href,
         };
         return albumObj;
       } catch (error) {
@@ -152,6 +151,7 @@ export const resolvers = {
           title: album.name,
           artist: album.artists[0].name,
           imageUrl: album.images[0].url,
+          trackListUrl: album.tracks.href,
         }));
 
         return albumsObj;
@@ -290,6 +290,53 @@ export const resolvers = {
           `Failed to find track for review with id:${parentValue._id}`
         );
       }
+    },
+  },
+  Track: {
+    album: async (parentValue) => {
+      try {
+        let spotifyKey = await getSpotifyAccessToken();
+        const response = await axios.get(
+          `https://api.spotify.com/v1/tracks/${parentValue._id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${spotifyKey}`,
+            },
+          }
+        );
+        let trackData = response.data;
+        let albumObj = {
+          _id: trackData.album.id,
+          title: trackData.album.name,
+          imageUrl: parentValue.imageUrl,
+          artist: trackData.album.artists[0].name,
+        };
+        return albumObj;
+      } catch (error) {
+        throw new GraphQLError(
+          `Failed to find album for track with id:${parentValue._id}`
+        );
+      }
+    },
+  },
+  Album: {
+    trackList: async (parentValue) => {
+      let spotifyKey = await getSpotifyAccessToken();
+      let response = await axios.get(parentValue.trackListUrl, {
+        headers: {
+          Authorization: `Bearer ${spotifyKey}`,
+        },
+      });
+      let trackList = response.data.items;
+      let tracksObj = trackList.map((track) => ({
+        _id: track.id,
+        title: track.name,
+        artist: track.artists[0].name,
+        album: parentValue.title,
+        imageUrl: parentValue.imageUrl,
+      }));
+
+      return tracksObj;
     },
   },
   // type Track {

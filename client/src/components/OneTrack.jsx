@@ -37,7 +37,8 @@ function App() {
       <>
         {/* {JSON.stringify(reviews)} */}
         <h2>"{track.title}"</h2>
-        <h3>{track.artist}</h3>
+        <h3>By: {track.artist}</h3>
+        <h3>On: {track.album.title}</h3>
         <img src={track.imageUrl} className="art" />
       </>
     );

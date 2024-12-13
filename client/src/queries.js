@@ -13,6 +13,10 @@ const GET_REVIEWS = gql`
         _id
         title
         artist
+        album {
+          _id
+          title
+        }
         imageUrl
       }
     }
@@ -27,7 +31,10 @@ const GET_REVIEW_BY_ID = gql`
       _id
       track {
         _id
-        album
+        album {
+          _id
+          title
+        }
         artist
         imageUrl
         title
@@ -54,7 +61,10 @@ const GET_USERS = gql`
           _id
           title
           artist
-          album
+          album {
+            _id
+            title
+          }
           imageUrl
         }
       }
@@ -76,7 +86,10 @@ const GET_USER_BY_ID = gql`
           _id
           title
           artist
-          album
+          album {
+            _id
+            title
+          }
           imageUrl
         }
       }
@@ -90,7 +103,10 @@ const SEARCH_TRACKS_BY_NAME = gql`
       _id
       title
       artist
-      album
+      album {
+        _id
+        title
+      }
       imageUrl
     }
   }
@@ -102,7 +118,10 @@ const GET_TRACK_BY_ID = gql`
       _id
       title
       artist
-      album
+      album {
+        _id
+        title
+      }
       imageUrl
     }
   }
@@ -133,7 +152,10 @@ const CREATE_REVIEW = gql`
         _id
         title
         artist
-        album
+        album {
+          _id
+          title
+        }
         imageUrl
       }
     }
@@ -164,9 +186,42 @@ const GET_TRACK_REVIEWS = gql`
         _id
         title
         artist
-        album
+        album {
+          _id
+          title
+        }
         imageUrl
       }
+    }
+  }
+`;
+
+const SEARCH_ALBUMS_BY_NAME = gql`
+  query SearchAlbumsByName($searchTerm: String!) {
+    searchAlbumsByName(searchTerm: $searchTerm) {
+      _id
+      title
+      artist
+      imageUrl
+      trackList {
+        _id
+        title
+      }
+    }
+  }
+`;
+
+const GET_ALBUM_BY_ID = gql`
+  query GetAlbumById($albumId: String!) {
+    getAlbumById(albumId: $albumId) {
+      _id
+      title
+      artist
+      trackList {
+        _id
+        title
+      }
+      imageUrl
     }
   }
 `;
@@ -181,6 +236,8 @@ let exported = {
   CREATE_REVIEW,
   CREATE_USER,
   GET_TRACK_REVIEWS,
+  SEARCH_ALBUMS_BY_NAME,
+  GET_ALBUM_BY_ID,
 };
 
 export default exported;

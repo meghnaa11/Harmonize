@@ -26,7 +26,7 @@ function App() {
         <h3>
           A review of{" "}
           <NavLink to={`/track/${review.track._id}`}>
-            "{review.track.title}"
+            "{review.track.title}" off the album "{review.track.album.title}".
           </NavLink>{" "}
           by {review.track.artist}
         </h3>

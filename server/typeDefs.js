@@ -35,7 +35,7 @@ export const typeDefs = `#graphql
         _id: String!,
         title: String!
         artist: String!
-        album: String!
+        album: Album!
         imageUrl: String!
     }    
     
@@ -43,7 +43,7 @@ export const typeDefs = `#graphql
         _id: String!,
         title: String!
         artist: String!
-        tracklist: [Track!]!
+        trackList: [Track!]!
         imageUrl: String!
     }
 `;
