@@ -61,23 +61,33 @@ function App() {
     );
   } else if (reviewsData) {
     let { getTrackReviews: reviewList } = reviewsData;
-    reviewBody = (
-      <>
-        <h3>Reviews</h3>
-        <ul>
-          {reviewList.map((review) => (
-            <li key={review._id}>
-              <p>
-                <NavLink to={`/reviews/${review._id}`}>
-                  "{review.title}"
-                </NavLink>{" "}
-                by {review.user.username}
-              </p>
-            </li>
-          ))}
-        </ul>
-      </>
-    );
+    console.log(reviewList);
+    if (reviewList.length === 0) {
+      reviewBody = (
+        <>
+          <h3>Reviews</h3>
+          <p>There are no reviews for this track yet.</p>
+        </>
+      );
+    } else {
+      reviewBody = (
+        <>
+          <h3>Reviews</h3>
+          <ul>
+            {reviewList.map((review) => (
+              <li key={review._id}>
+                <p>
+                  <NavLink to={`/reviews/${review._id}`}>
+                    "{review.title}"
+                  </NavLink>{" "}
+                  by {review.user.username}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </>
+      );
+    }
   }
 
   return (

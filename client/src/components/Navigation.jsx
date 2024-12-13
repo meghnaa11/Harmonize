@@ -25,7 +25,6 @@ const NavigationAuth = () => {
           Create Review
         </NavLink>
       </ul>
-      <SignOutButton></SignOutButton>
     </nav>
   );
 };

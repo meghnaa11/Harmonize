@@ -39,7 +39,8 @@ const HomeAuth = () => {
 const HomeNonAuth = () => {
   return (
     <>
-      <p>You are currently not logged in, you should do that.</p>;{homeText}
+      <p>You are currently not logged in, you should do that.</p>
+      {homeText}
     </>
   );
 };

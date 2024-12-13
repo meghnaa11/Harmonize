@@ -9,6 +9,7 @@ import Reviews from "./Reviews";
 import OneReview from "./OneReview";
 import OneTrack from "./OneTrack";
 import { AuthProvider } from "../context/AuthContext";
+import SignOutButton from "./SignOut";
 import PrivateRoute from "./PrivateRoute";
 
 function App() {
@@ -28,6 +29,9 @@ function App() {
           <Route path="/track/:id" element={<OneTrack />} />
         </Routes>
       </div>
+      <footer>
+        <SignOutButton></SignOutButton>
+      </footer>
     </AuthProvider>
   );
 }
