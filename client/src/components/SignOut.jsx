@@ -8,7 +8,7 @@ const SignOutButton = () => {
     navigate("/");
   }
   return (
-    <button className="button" type="button" onClick={innerSignOut}>
+    <button className="signOutButton" type="button" onClick={innerSignOut}>
       Sign Out
     </button>
   );
