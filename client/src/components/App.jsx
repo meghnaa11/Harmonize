@@ -29,9 +29,6 @@ function App() {
           <Route path="/track/:id" element={<OneTrack />} />
         </Routes>
       </div>
-      <footer>
-        <SignOutButton></SignOutButton>
-      </footer>
     </AuthProvider>
   );
 }
