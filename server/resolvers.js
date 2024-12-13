@@ -43,6 +43,15 @@ export const resolvers = {
         );
       return review;
     },
+    getTrackReviews: async (_, args) => {
+      let rcol = await reviews();
+      let reviewList = await rcol.find({ trackId: args.trackId }).toArray();
+      if (!reviewList)
+        throw new GraphQLError(
+          `Failed to find review with id:${args.reviewId}`
+        );
+      return reviewList;
+    },
     getTrackById: async (_, args) => {
       try {
         let spotifyKey = await getSpotifyAccessToken();

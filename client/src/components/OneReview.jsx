@@ -18,15 +18,19 @@ function App() {
     body = <p>There was an error: {error.message}</p>;
   } else if (data) {
     let { getReviewById: review } = data;
-    console.log(data);
+    // console.log(data);
     body = (
       <>
         {/* {JSON.stringify(reviews)} */}
         <h2>"{review.title}"</h2>
         <h3>
-          A review of "{review.track.title}" by {review.track.artist}
+          A review of{" "}
+          <NavLink to={`/track/${review.track._id}`}>
+            "{review.track.title}"
+          </NavLink>{" "}
+          by {review.track.artist}
         </h3>
-        <img src={review.track.imageUrl} />
+        <img src={review.track.imageUrl} className="art" />
         <h4>A review by {review.user.username}</h4>
         <p>Review Text: {review.content}</p>
       </>

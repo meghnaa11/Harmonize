@@ -1,0 +1,25 @@
+.art {
+  width: 250px;
+}
+
+.body,
+html {
+  margin-left: 20%;
+  margin-right: 20%;
+}
+
+.signOutButton {
+  background: none;
+  border: none;
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
