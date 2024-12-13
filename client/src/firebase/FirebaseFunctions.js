@@ -12,12 +12,25 @@ import {
   reauthenticateWithCredential,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 async function doCreateUserWithEmailAndPassword(email, password, displayName) {
   const auth = getAuth();
-  await createUserWithEmailAndPassword(auth, email, password);
-  await updateProfile(auth.currentUser, { displayName: displayName });
-  //Add user query here!
+  const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+  const user = userCredential.user;
+  await updateProfile(auth.currentUser, { displayName });
+  
+  // Call the backend to save user details into mongo
+  await axios.post("http://localhost:5000/graphql", {
+    query: `
+      mutation {
+        createUser(userId: "${user.uid}", username: "${displayName}", email: "${email}") {
+          _id
+        }
+      }
+    `,
+  });
+
 }
 
 async function doChangePassword(email, oldPassword, newPassword) {

@@ -24,6 +24,7 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/reviews" element={<Reviews />} />
           <Route path="/reviews/:id" element={<OneReview />} />
+          <Route path="/user/:userId" element={<User />} />
         </Routes>
       </div>
     </AuthProvider>
