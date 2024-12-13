@@ -107,6 +107,60 @@ export const resolvers = {
         );
       }
     },
+    getAlbumById: async (_, args) => {
+      try {
+        let spotifyKey = await getSpotifyAccessToken();
+        const response = await axios.get(
+          `https://api.spotify.com/v1/albums/${args.albumId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${spotifyKey}`,
+            },
+          }
+        );
+        let albumData = response.data;
+        let albumObj = {
+          _id: albumData.id,
+          title: albumData.name,
+          artist: albumData.artists[0].name,
+          imageUrl: albumData.images[0].url,
+        };
+        return albumObj;
+      } catch (error) {
+        throw new GraphQLError(
+          `Failed to find album with id:${args.albumId}, msg=${error}`
+        );
+      }
+    },
+    searchAlbumsByName: async (_, args) => {
+      let spotifyKey = await getSpotifyAccessToken();
+      try {
+        const response = await axios.get(`https://api.spotify.com/v1/search`, {
+          headers: {
+            Authorization: `Bearer ${spotifyKey}`,
+          },
+          params: {
+            q: args.searchTerm,
+            type: "album",
+          },
+        });
+
+        let albumsData = response.data.albums.items;
+        console.log(JSON.stringify(albumsData));
+        let albumsObj = albumsData.map((album) => ({
+          _id: album.id,
+          title: album.name,
+          artist: album.artists[0].name,
+          imageUrl: album.images[0].url,
+        }));
+
+        return albumsObj;
+      } catch (error) {
+        throw new GraphQLError(
+          `Failed to search albums with name:${args.searchTerm}`
+        );
+      }
+    },
   },
 
   // type Mutation {
