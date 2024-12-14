@@ -21,22 +21,24 @@ function App() {
     // console.log(data);
     body = (
       <>
-        {/* {JSON.stringify(reviews)} */}
-        <h2>"{review.title}"</h2>
-        <h3>
-          A review of{" "}
-          <NavLink to={`/track/${review.track._id}`}>
-            "{review.track.title}"
-          </NavLink>{" "}
-          off the album{" "}
-          <NavLink to={`/album/${review.track.album._id}`}>
-            "{review.track.album.title}"
-          </NavLink>
-          by {review.track.artist}
-        </h3>
-        <img src={review.track.imageUrl} className="art" />
-        <h4>A review by {review.user.username}</h4>
-        <p>Review Text: {review.content}</p>
+        <div className="reviewCard">
+          {/* {JSON.stringify(reviews)} */}
+          <h2>"{review.title}"</h2>
+          <h3>
+            A review of{" "}
+            <NavLink to={`/track/${review.track._id}`} className="link">
+              "{review.track.title}"
+            </NavLink>{" "}
+            off the album{" "}
+            <NavLink to={`/album/${review.track.album._id}`} className="link">
+              "{review.track.album.title}"
+            </NavLink>
+            by {review.track.artist}
+          </h3>
+          <img src={review.track.imageUrl} className="art" />
+          <h4>A review by {review.user.username}</h4>
+          <p>Review Text: {review.content}</p>
+        </div>
       </>
     );
   }

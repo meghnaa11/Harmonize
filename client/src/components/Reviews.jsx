@@ -13,21 +13,28 @@ function App() {
   } else if (error) {
     body = <p>There was an error: {error.message}</p>;
   } else if (data) {
-    let { reviews } = data;
+    let { reviews: reviewReverse } = data;
+    let reviews = [...reviewReverse].reverse();
     body = (
       <>
         {/* {JSON.stringify(reviews)} */}
-        <ul>
+        <ul className="reviewList">
           {reviews.map((review) => (
             <li key={review._id}>
-              <h3>
-                <NavLink to={`/reviews/${review._id}`}>
-                  "{review.title}" - {review.user.username}
-                </NavLink>
-              </h3>
-              <h4>
-                A review of "{review.track.title}" by {review.track.artist}
-              </h4>
+              <div>
+                <h2>
+                  <NavLink to={`/reviews/${review._id}`} className="link">
+                    "{review.title}" - {review.user.username}
+                  </NavLink>
+                </h2>
+                <h3>
+                  A review of{" "}
+                  <NavLink to={`/track/${review.track._id}`} className="link">
+                    "{review.track.title}"
+                  </NavLink>{" "}
+                  by {review.track.artist}
+                </h3>
+              </div>
               <img src={review.track.imageUrl} className="art" />
             </li>
           ))}
@@ -38,7 +45,7 @@ function App() {
 
   return (
     <>
-      <h2>Reviews</h2>
+      <h2 className="subtitle">Reviews</h2>
       {body}
     </>
   );

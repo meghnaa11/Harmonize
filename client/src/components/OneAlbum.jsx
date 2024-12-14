@@ -27,26 +27,30 @@ function App() {
     body = (
       <>
         {/* {JSON.stringify(reviews)} */}
-        <h2>"{album.title}"</h2>
-        <h3>By: {album.artist}</h3>
-        <img src={album.imageUrl} className="art" />
-        <h4>Tracklist</h4>
-        <ol>
-          {album.trackList.map((track) => (
-            <li key={track._id}>
-              <p>
-                <NavLink to={`/track/${track._id}`}>{track.title}</NavLink>
-              </p>
-            </li>
-          ))}
-        </ol>
+        <div className="albumCard">
+          <h2>"{album.title}"</h2>
+          <h3>By: {album.artist}</h3>
+          <img src={album.imageUrl} className="art" />
+          <h4>Tracklist</h4>
+          <ol>
+            {album.trackList.map((track) => (
+              <li key={track._id}>
+                <p>
+                  <NavLink to={`/track/${track._id}`} className="link">
+                    {track.title}
+                  </NavLink>
+                </p>
+              </li>
+            ))}
+          </ol>
+        </div>
       </>
     );
   }
 
   return (
     <>
-      <h2>Album</h2>
+      <h2 className="subtitle">Album</h2>
       {body}
     </>
   );

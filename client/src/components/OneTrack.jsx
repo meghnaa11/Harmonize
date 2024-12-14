@@ -36,15 +36,17 @@ function App() {
     body = (
       <>
         {/* {JSON.stringify(reviews)} */}
-        <h2>"{track.title}"</h2>
-        <h3>By: {track.artist}</h3>
-        <h3>
-          On:{" "}
-          <NavLink to={`/album/${track.album._id}`}>
-            {track.album.title}
-          </NavLink>
-        </h3>
-        <img src={track.imageUrl} className="art" />
+        <div className="trackCard">
+          <h2>"{track.title}"</h2>
+          <h3>By: {track.artist}</h3>
+          <h3>
+            On:{" "}
+            <NavLink to={`/album/${track.album._id}`} className="link">
+              {track.album.title}
+            </NavLink>
+          </h3>
+          <img src={track.imageUrl} className="art" />
+        </div>
       </>
     );
   }
@@ -78,19 +80,21 @@ function App() {
     } else {
       reviewBody = (
         <>
-          <h3>Reviews</h3>
-          <ul>
-            {reviewList.map((review) => (
-              <li key={review._id}>
-                <p>
-                  <NavLink to={`/reviews/${review._id}`}>
-                    "{review.title}"
-                  </NavLink>{" "}
-                  by {review.user.username}
-                </p>
-              </li>
-            ))}
-          </ul>
+          <div className="trackReviewsCard">
+            <h3>Reviews</h3>
+            <ul>
+              {reviewList.map((review) => (
+                <li key={review._id}>
+                  <p>
+                    <NavLink to={`/reviews/${review._id}`} className="link">
+                      "{review.title}"
+                    </NavLink>{" "}
+                    by {review.user.username}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
         </>
       );
     }
@@ -98,7 +102,7 @@ function App() {
 
   return (
     <>
-      <h2>Track</h2>
+      <h2 className="subtitle">Track</h2>
       {body}
       {reviewBody}
     </>

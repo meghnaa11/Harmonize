@@ -1,25 +1,104 @@
-.art {
-  width: 250px;
-}
-
-.body,
-html {
+html,
+body {
   margin-left: 20%;
   margin-right: 20%;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  background-color: black;
+  color: rgb(0, 176, 62);
 }
 
-.signOutButton {
-  background: none;
-  border: none;
-  color: blue;
-  text-decoration: underline;
-  cursor: pointer;
-  padding: 0;
-  font: inherit;
+.App-header {
+  background-color: rgb(0, 176, 62);
+  color: black;
+  text-align: center;
+}
+
+.AppTitle {
+  font-size: 50px;
+}
+
+.subtitle {
+  font-size: 30px;
+  text-align: center;
 }
 
 nav {
   display: flex;
   justify-content: space-between;
   gap: 20px;
+}
+
+.NavLink {
+  border: 1% solid;
+  border: solid;
+  color: black;
+  padding: 10px 20px;
+  text-decoration: none;
+  font-size: large;
+  margin: 2%;
+}
+
+.link {
+  color: rgb(0, 176, 176);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.link:visited {
+  color: rgb(0, 176, 176);
+}
+
+.signOutButton {
+  background: rgb(0, 176, 62);
+  border: 1% solid;
+  color: black;
+  cursor: pointer;
+  padding: 10px 20px;
+  font: inherit;
+}
+
+.reviewList {
+  list-style-type: none;
+  padding: 0;
+}
+
+.reviewList li,
+.trackCard,
+.albumCard,
+.trackReviewsCard,
+.reviewCard,
+.homeCard {
+  background: #1e1e1e;
+  color: #d4ffd4;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px;
+}
+
+.reviewList li,
+.trackCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.reviewList li div,
+.albumCard {
+  display: flex;
+  flex-direction: column;
+}
+
+.reviewList li div {
+  flex-grow: 1;
+}
+
+.art {
+  max-width: 20%;
+  border-radius: 6px;
+  margin-top: 15px;
 }
