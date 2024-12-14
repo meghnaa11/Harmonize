@@ -45,7 +45,7 @@ function App() {
 
   return (
     <>
-      <h2>Reviews</h2>
+      <h2 className="subtitle">Reviews</h2>
       {body}
     </>
   );

@@ -31,8 +31,8 @@ function App() {
           <h2>"{album.title}"</h2>
           <h3>By: {album.artist}</h3>
           <img src={album.imageUrl} className="art" />
-          <h4>Tracklist</h4>
-          <ol>
+          <h3>Tracklist</h3>
+          <ol className="trackList">
             {album.trackList.map((track) => (
               <li key={track._id}>
                 <p>

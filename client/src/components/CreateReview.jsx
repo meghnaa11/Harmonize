@@ -10,7 +10,18 @@ const CreateReview = () => {
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
-  const [createReview] = useMutation(queries.CREATE_REVIEW);
+  const [createReview] = useMutation(queries.CREATE_REVIEW, {
+    update(cache, { data: { createReview } }) {
+      const { reviews } = cache.readQuery({
+        query: queries.GET_REVIEWS,
+      });
+      cache.writeQuery({
+        query: queries.GET_REVIEWS,
+        data: { reviews: [...reviews, createReview] },
+      });
+    },
+  });
+
   const {
     error: trackError,
     loading: trackLoading,
@@ -33,7 +44,7 @@ const CreateReview = () => {
       setSearchTerm();
     }
   }
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
     let trackIdString = document.getElementById("dropdown");
     if (trackIdString === null || trackIdString.value === "") {
@@ -45,7 +56,7 @@ const CreateReview = () => {
       try {
         titleString = v.vTitle(titleString);
         contentString = v.vContent(contentString);
-        createReview({
+        let response = await createReview({
           variables: {
             title: titleString,
             content: contentString,
@@ -53,7 +64,7 @@ const CreateReview = () => {
             trackId: trackIdString,
           },
         });
-        alert("Your review has been created!");
+        alert("Review successfully created!");
         navigate("/reviews");
       } catch (e) {
         alert(e);
@@ -76,7 +87,7 @@ const CreateReview = () => {
   } else if (trackError) {
     dropdown = (
       <select>
-        <option value=""></option>
+        <option value="">Select a track...</option>
       </select>
     );
   } else if (trackLoading) {
@@ -90,11 +101,11 @@ const CreateReview = () => {
   }
   return (
     <>
-      <h2>Create a Review</h2>
-      <div>
+      <h2 className="subtitle">Create a Review</h2>
+      <div className="formCard">
         <form onSubmit={handleSearch}>
           <label htmlFor="trackSearch">
-            Search for a track (can type track name and/or artist):
+            Track:
             <br />
             <input id="trackSearch" />
           </label>
@@ -102,17 +113,15 @@ const CreateReview = () => {
             Search!
           </button>
         </form>
-      </div>
-      <div>
         <form onSubmit={handleSubmit}>
           {dropdown} <br />
           <label htmlFor="reviewTitle">
-            Title:
+            Title: <br></br>
             <input id="reviewTitle" />
           </label>{" "}
           <br />
           <label htmlFor="reviewTitle">
-            Content:
+            Content:<br></br>
             <textarea id="reviewContent" />
           </label>{" "}
           <br />

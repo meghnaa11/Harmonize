@@ -35,8 +35,12 @@ const NavigationNonAuth = () => {
     <>
       <p>You are currently not logged in.</p>
       <nav className="navigation">
-        <NavLink to="/signup">Sign-up</NavLink>
-        <NavLink to="/signin">Sign-In</NavLink>
+        <NavLink to="/signup" className="NavLink">
+          Sign-up
+        </NavLink>
+        <NavLink to="/signin" className="NavLink">
+          Sign-In
+        </NavLink>
       </nav>
     </>
   );
