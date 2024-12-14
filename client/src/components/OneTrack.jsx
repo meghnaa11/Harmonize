@@ -2,9 +2,10 @@ import React from "react";
 import "../App.css";
 import { useQuery } from "@apollo/client";
 import queries from "../queries";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useParams, useNavigate } from "react-router-dom";
 
 function App() {
+  const navigate = useNavigate();
   const { id } = useParams();
   const {
     loading: trackLoading,
@@ -26,13 +27,13 @@ function App() {
   });
 
   let body = null;
+  let reviewButton = null;
   if (trackLoading) {
     body = <p>Loading...</p>;
   } else if (trackError) {
     body = <p>There was an error: {trackError.message}</p>;
   } else if (trackData) {
     let { getTrackById: track } = trackData;
-    // console.log(data);
     body = (
       <>
         {/* {JSON.stringify(reviews)} */}
@@ -53,6 +54,23 @@ function App() {
           <img src={track.imageUrl} className="art" />
         </div>
       </>
+    );
+    reviewButton = (
+      <button
+        onClick={() => {
+          console.log(track);
+          navigate("/createReview", {
+            state: {
+              defaultTrackId: track._id,
+              defaultTrackTitle: track.title,
+              defaultTrackArtist: track.artist,
+            },
+          });
+        }}
+        className="reviewSuggest"
+      >
+        Review this track!
+      </button>
     );
   }
 
@@ -109,6 +127,7 @@ function App() {
     <>
       <h2 className="subtitle">Track</h2>
       {body}
+      {reviewButton}
       {reviewBody}
     </>
   );
