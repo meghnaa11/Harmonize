@@ -8,6 +8,8 @@ import Home from "./Home";
 import Reviews from "./Reviews";
 import OneReview from "./OneReview";
 import OneTrack from "./OneTrack";
+import OneAlbum from "./OneAlbum";
+import User from "./User";
 import { AuthProvider } from "../context/AuthContext";
 import SignOutButton from "./SignOut";
 import PrivateRoute from "./PrivateRoute";
@@ -28,6 +30,7 @@ function App() {
           <Route path="/reviews/:id" element={<OneReview />} />
           <Route path="/track/:id" element={<OneTrack />} />
           <Route path="/user/:userId" element={<User />} />
+          <Route path="/album/:id" element={<OneAlbum />} />
         </Routes>
       </div>
     </AuthProvider>

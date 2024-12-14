@@ -37,7 +37,13 @@ function App() {
       <>
         {/* {JSON.stringify(reviews)} */}
         <h2>"{track.title}"</h2>
-        <h3>{track.artist}</h3>
+        <h3>By: {track.artist}</h3>
+        <h3>
+          On:{" "}
+          <NavLink to={`/album/${track.album._id}`}>
+            {track.album.title}
+          </NavLink>
+        </h3>
         <img src={track.imageUrl} className="art" />
       </>
     );

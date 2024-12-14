@@ -7,6 +7,8 @@ export const typeDefs = `#graphql
         getTrackReviews(trackId:String!): [Review]!
         getTrackById(trackId:String!): Track!
         searchTracksByName(searchTerm:String!): [Track]!
+        getAlbumById(albumId:String!): Album!
+        searchAlbumsByName(searchTerm:String!): [Album]!
     }
 
     type Mutation {
@@ -33,7 +35,15 @@ export const typeDefs = `#graphql
         _id: String!,
         title: String!
         artist: String!
-        album: String
+        album: Album!
         imageUrl: String!
     }    
+    
+    type Album {
+        _id: String!,
+        title: String!
+        artist: String!
+        trackList: [Track!]!
+        imageUrl: String!
+    }
 `;

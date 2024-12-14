@@ -28,6 +28,10 @@ function App() {
           <NavLink to={`/track/${review.track._id}`}>
             "{review.track.title}"
           </NavLink>{" "}
+          off the album{" "}
+          <NavLink to={`/album/${review.track.album._id}`}>
+            "{review.track.album.title}"
+          </NavLink>
           by {review.track.artist}
         </h3>
         <img src={review.track.imageUrl} className="art" />
