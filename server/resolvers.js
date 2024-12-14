@@ -69,6 +69,7 @@ export const resolvers = {
           title: trackData.name,
           artist: trackData.artists[0].name,
           imageUrl: trackData.album.images[0].url,
+          songUrl: trackData.external_urls.spotify,
         };
         return trackObj;
       } catch (error) {
@@ -96,6 +97,7 @@ export const resolvers = {
           title: track.name,
           artist: track.artists[0].name,
           imageUrl: track.album.images[0].url,
+          songUrl: track.external_urls.spotify,
         }));
 
         return tracksObj;
@@ -145,13 +147,12 @@ export const resolvers = {
         });
 
         let albumsData = response.data.albums.items;
-        console.log(JSON.stringify(albumsData));
+        // console.log(JSON.stringify(albumsData));
         let albumsObj = albumsData.map((album) => ({
           _id: album.id,
           title: album.name,
           artist: album.artists[0].name,
           imageUrl: album.images[0].url,
-          trackListUrl: album.tracks.href,
         }));
 
         return albumsObj;
@@ -285,6 +286,7 @@ export const resolvers = {
           artist: trackData.artists[0].name,
           album: trackData.album.name,
           imageUrl: trackData.album.images[0].url,
+          songUrl: trackData.external_urls.spotify,
         };
         return trackObj;
       } catch (error) {
@@ -324,6 +326,25 @@ export const resolvers = {
   Album: {
     trackList: async (parentValue) => {
       let spotifyKey = await getSpotifyAccessToken();
+      if (!parentValue.trackListUrl) {
+        try {
+          let spotifyKey = await getSpotifyAccessToken();
+          const response = await axios.get(
+            `https://api.spotify.com/v1/albums/${parentValue._id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${spotifyKey}`,
+              },
+            }
+          );
+          let albumData = response.data;
+          parentValue.trackListUrl = albumData.tracks.href;
+        } catch (error) {
+          throw new GraphQLError(
+            `Failed to find album with id:${args.albumId}, msg=${error}`
+          );
+        }
+      }
       let response = await axios.get(parentValue.trackListUrl, {
         headers: {
           Authorization: `Bearer ${spotifyKey}`,
@@ -336,6 +357,7 @@ export const resolvers = {
         artist: track.artists[0].name,
         album: parentValue.title,
         imageUrl: parentValue.imageUrl,
+        songUrl: track.external_urls.spotify,
       }));
 
       return tracksObj;

@@ -52,7 +52,8 @@ nav {
   color: rgb(0, 176, 176);
 }
 
-.signOutButton {
+.signOutButton,
+.reviewSuggest {
   background: rgb(0, 176, 62);
   border: 1% solid;
   color: black;

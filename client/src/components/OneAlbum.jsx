@@ -38,7 +38,10 @@ function App() {
                 <p>
                   <NavLink to={`/track/${track._id}`} className="link">
                     {track.title}
-                  </NavLink>
+                  </NavLink>{" "}
+                  <a href={track.songUrl} className="link" target="_blank">
+                    (Listen)
+                  </a>
                 </p>
               </li>
             ))}

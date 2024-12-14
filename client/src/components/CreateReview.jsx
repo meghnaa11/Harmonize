@@ -4,21 +4,48 @@ import { AuthContext } from "../context/AuthContext";
 import * as v from "../validation";
 import { useQuery, useMutation } from "@apollo/client";
 import queries from "../queries";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const CreateReview = () => {
+  const location = useLocation();
+  const { defaultTrackId, defaultTrackTitle, defaultTrackArtist } =
+    location.state || {};
+  console.log(defaultTrackArtist, defaultTrackId, defaultTrackTitle);
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [createReview] = useMutation(queries.CREATE_REVIEW, {
     update(cache, { data: { createReview } }) {
-      const { reviews } = cache.readQuery({
-        query: queries.GET_REVIEWS,
-      });
-      cache.writeQuery({
-        query: queries.GET_REVIEWS,
-        data: { reviews: [...reviews, createReview] },
-      });
+      try {
+        const { reviews } = cache.readQuery({
+          query: queries.GET_REVIEWS,
+        });
+        if (reviews) {
+          cache.writeQuery({
+            query: queries.GET_REVIEWS,
+            data: {
+              reviews: [...reviews, createReview],
+            },
+          });
+        }
+        const trackId = createReview.track._id;
+        const { getTrackReviews } = cache.readQuery({
+          query: queries.GET_TRACK_REVIEWS,
+          variables: { trackId },
+        });
+
+        if (getTrackReviews) {
+          cache.writeQuery({
+            query: queries.GET_TRACK_REVIEWS,
+            variables: { trackId },
+            data: {
+              getTrackReviews: [...getTrackReviews, createReview],
+            },
+          });
+        }
+      } catch (error) {
+        console.error("Error updating cache:", error);
+      }
     },
   });
 
@@ -86,13 +113,15 @@ const CreateReview = () => {
     );
   } else if (trackError) {
     dropdown = (
-      <select>
-        <option value="">Select a track...</option>
+      <select id="dropdown">
+        <option value={defaultTrackId}>
+          "{defaultTrackTitle}" by {defaultTrackArtist}
+        </option>
       </select>
     );
   } else if (trackLoading) {
     dropdown = (
-      <select>
+      <select id="dropdown">
         <option value="" defaultValue="">
           Loading tracks...
         </option>
@@ -107,7 +136,7 @@ const CreateReview = () => {
           <label htmlFor="trackSearch">
             Track:
             <br />
-            <input id="trackSearch" />
+            <input id="trackSearch" defaultValue={defaultTrackTitle} />
           </label>
           <button id="search" type="submit">
             Search!
