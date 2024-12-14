@@ -5,7 +5,11 @@ import { Route, Routes } from "react-router-dom";
 
 const Home = () => {
   const { currentUser } = useContext(AuthContext);
-  return <div>{currentUser ? <HomeAuth /> : <HomeNonAuth />}</div>;
+  return (
+    <div className="homeCard">
+      {currentUser ? <HomeAuth /> : <HomeNonAuth />}
+    </div>
+  );
 };
 
 const homeText = (
