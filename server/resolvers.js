@@ -286,6 +286,7 @@ export const resolvers = {
           artist: trackData.artists[0].name,
           album: trackData.album.name,
           imageUrl: trackData.album.images[0].url,
+          songUrl: trackData.external_urls.spotify,
         };
         return trackObj;
       } catch (error) {
