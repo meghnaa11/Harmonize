@@ -30,5 +30,7 @@ const getCollectionFn = (collection) => {
   };
 };
 
+export const albums = getCollectionFn("albums");
+export const artists = getCollectionFn("artists");
 export const users = getCollectionFn("users");
 export const reviews = getCollectionFn("reviews");

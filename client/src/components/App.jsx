@@ -28,6 +28,7 @@ function App() {
           <Route path="/reviews" element={<Reviews />} />
           <Route path="/reviews/:id" element={<OneReview />} />
           <Route path="/track/:id" element={<OneTrack />} />
+          <Route path="/user/:userId" element={<User />} />
           <Route path="/album/:id" element={<OneAlbum />} />
         </Routes>
       </div>
