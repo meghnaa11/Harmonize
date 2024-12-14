@@ -9,6 +9,7 @@ import Reviews from "./Reviews";
 import OneReview from "./OneReview";
 import OneTrack from "./OneTrack";
 import OneAlbum from "./OneAlbum";
+import User from "./User";
 import { AuthProvider } from "../context/AuthContext";
 import SignOutButton from "./SignOut";
 import PrivateRoute from "./PrivateRoute";
