@@ -37,6 +37,7 @@ export const typeDefs = `#graphql
         artist: String!
         album: Album!
         imageUrl: String!
+        songUrl: String!
     }    
     
     type Album {

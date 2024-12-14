@@ -37,7 +37,12 @@ function App() {
       <>
         {/* {JSON.stringify(reviews)} */}
         <div className="trackCard">
-          <h2>"{track.title}"</h2>
+          <div>
+            <h2>"{track.title}"</h2>
+            <a href={track.songUrl} className="link" target="_blank">
+              Listen here!
+            </a>
+          </div>
           <h3>By: {track.artist}</h3>
           <h3>
             On:{" "}

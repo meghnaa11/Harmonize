@@ -34,6 +34,10 @@ function App() {
                   </NavLink>{" "}
                   by {review.track.artist}
                 </h3>
+                <a href={review.track.songUrl} className="link" target="_blank">
+                  <br />
+                  Listen here!
+                </a>
               </div>
               <img src={review.track.imageUrl} className="art" />
             </li>

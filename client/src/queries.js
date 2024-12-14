@@ -13,6 +13,7 @@ const GET_REVIEWS = gql`
         _id
         title
         artist
+        songUrl
         album {
           _id
           title
@@ -38,6 +39,7 @@ const GET_REVIEW_BY_ID = gql`
         artist
         imageUrl
         title
+        songUrl
       }
       user {
         _id
@@ -61,6 +63,7 @@ const GET_USERS = gql`
           _id
           title
           artist
+          songUrl
           album {
             _id
             title
@@ -86,6 +89,7 @@ const GET_USER_BY_ID = gql`
           _id
           title
           artist
+          songUrl
           album {
             _id
             title
@@ -103,6 +107,7 @@ const SEARCH_TRACKS_BY_NAME = gql`
       _id
       title
       artist
+      songUrl
       album {
         _id
         title
@@ -118,6 +123,7 @@ const GET_TRACK_BY_ID = gql`
       _id
       title
       artist
+      songUrl
       album {
         _id
         title
@@ -152,6 +158,7 @@ const CREATE_REVIEW = gql`
         _id
         title
         artist
+        songUrl
         album {
           _id
           title
@@ -186,6 +193,7 @@ const GET_TRACK_REVIEWS = gql`
         _id
         title
         artist
+        songUrl
         album {
           _id
           title
@@ -220,6 +228,7 @@ const GET_ALBUM_BY_ID = gql`
       trackList {
         _id
         title
+        songUrl
       }
       imageUrl
     }
