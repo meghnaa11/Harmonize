@@ -3,14 +3,14 @@ import { useContext } from "react";
 import "../App.css";
 import { useQuery, useMutation } from "@apollo/client";
 import queries from "../queries";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useParams, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import * as v from "../validation";
 
 function App() {
   const { id } = useParams();
   const { currentUser } = useContext(AuthContext);
-
+  const navigate = useNavigate();
   const { loading, error, data } = useQuery(queries.GET_REVIEW_BY_ID, {
     variables: {
       reviewId: id,
@@ -24,6 +24,54 @@ function App() {
         variables: { reviewId: id },
       },
     ],
+  });
+
+  const [deleteComment] = useMutation(queries.DELETE_COMMENT, {
+    refetchQueries: [
+      {
+        query: queries.GET_REVIEW_BY_ID,
+        variables: { reviewId: id },
+      },
+    ],
+  });
+
+  const [deleteReview] = useMutation(queries.DELETE_REVIEW, {
+    update(cache, { data }) {
+      try {
+        const reviewId = id;
+        const { reviews } = cache.readQuery({
+          query: queries.GET_REVIEWS,
+        });
+
+        if (reviews) {
+          cache.writeQuery({
+            query: queries.GET_REVIEWS,
+            data: {
+              reviews: reviews.filter((review) => review._id !== reviewId),
+            },
+          });
+        }
+        const trackId = data.trackId;
+        const { getTrackReviews } = cache.readQuery({
+          query: queries.GET_TRACK_REVIEWS,
+          variables: { trackId },
+        });
+
+        if (getTrackReviews) {
+          cache.writeQuery({
+            query: queries.GET_TRACK_REVIEWS,
+            variables: { trackId },
+            data: {
+              getTrackReviews: getTrackReviews.filter(
+                (review) => review._id !== reviewId
+              ),
+            },
+          });
+        }
+      } catch (error) {
+        console.error("Error updating cache:", error);
+      }
+    },
   });
 
   async function addComment(event) {
@@ -57,6 +105,20 @@ function App() {
         <div className="reviewCard">
           {/* {JSON.stringify(reviews)} */}
           <h2>"{review.title}"</h2>
+          {currentUser.uid === review.user._id && (
+            <button
+              onClick={async () => {
+                await deleteReview({
+                  variables: {
+                    reviewId: review._id,
+                  },
+                });
+                navigate("/reviews");
+              }}
+            >
+              Delete
+            </button>
+          )}
           <h3>
             A review of{" "}
             <NavLink to={`/track/${review.track._id}`} className="link">
@@ -86,6 +148,19 @@ function App() {
               <li key={comment._id}>
                 <h3>{comment.user.username}</h3>
                 <p>{comment.text}</p>
+                {currentUser.uid === comment.user._id && (
+                  <button
+                    onClick={async () => {
+                      await deleteComment({
+                        variables: {
+                          commentId: comment._id,
+                        },
+                      });
+                    }}
+                  >
+                    Delete
+                  </button>
+                )}
               </li>
             ))}
           </ul>

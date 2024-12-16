@@ -5,6 +5,7 @@ body {
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
   background-color: black;
   color: rgb(0, 176, 62);
+  font-size: 120%;
 }
 
 .App-header {
@@ -14,11 +15,11 @@ body {
 }
 
 .AppTitle {
-  font-size: 50px;
+  font-size: 60px;
 }
 
 .subtitle {
-  font-size: 30px;
+  font-size: 40px;
   text-align: center;
 }
 

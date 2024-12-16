@@ -170,7 +170,7 @@ export const resolvers = {
   // }
   Mutation: {
     createUser: async (_, args) => {
-      console.log("createUser called with args:", args);
+      // console.log("createUser called with args:", args);
       let ucol = await users();
       let userObj = {
         _id: args.uuid,
@@ -179,7 +179,7 @@ export const resolvers = {
       };
       let inserted = await ucol.insertOne(userObj);
       if (!inserted) throw new GraphQLError("Failed to create user.");
-      console.log("User successfully inserted:", userObj);
+      // console.log("User successfully inserted:", userObj);
       return userObj;
     },
     createReview: async (_, args) => {
@@ -241,6 +241,14 @@ export const resolvers = {
         );
       return reviewObj;
     },
+    deleteReview: async (_, args) => {
+      let rcol = await reviews();
+      let review = await rcol.findOneAndDelete({ _id: args.reviewId });
+      if (!review) {
+        throw new GraphQLError("Review not found");
+      }
+      return "Review deleted successfully.";
+    },
     createComment: async (_, args) => {
       try {
         let commentObj = {
@@ -273,6 +281,18 @@ export const resolvers = {
       } catch (e) {
         throw new GraphQLError(e.message);
       }
+    },
+    deleteComment: async (_, args) => {
+      let rcol = await reviews();
+      let review = await rcol.findOneAndUpdate(
+        { "comments._id": args.commentId },
+        { $pull: { comments: { _id: args.commentId } } },
+        { returnDocument: "after" }
+      );
+      if (!review) {
+        throw new GraphQLError("Review not found");
+      }
+      return "Comment deleted successfully.";
     },
   },
 
