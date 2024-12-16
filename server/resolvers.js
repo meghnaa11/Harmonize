@@ -217,12 +217,21 @@ export const resolvers = {
         );
       }
 
+      let existingReview = await rcol.findOne({
+        userId: args.userId,
+        trackId: args.trackId,
+      });
+      if (existingReview) {
+        throw new GraphQLError("Already reviewed this track!");
+      }
+
       let reviewObj = {
         _id: uuid(),
         title: args.title,
         content: args.content,
         userId: args.userId,
         trackId: args.trackId,
+        comments: [],
       };
 
       let inserted = await rcol.insertOne(reviewObj);
@@ -231,6 +240,39 @@ export const resolvers = {
           "Could not create review: Internal server error."
         );
       return reviewObj;
+    },
+    createComment: async (_, args) => {
+      try {
+        let commentObj = {
+          _id: uuid(),
+          userId: args.userId,
+          text: args.text,
+        };
+
+        let rcol = await reviews();
+        let review = await rcol.findOne({ _id: args.reviewId });
+
+        if (!review) {
+          throw new GraphQLError("Review not found");
+        }
+        for (let comment of review.comments) {
+          if (args.userId === comment.userId) {
+            throw new GraphQLError("Already Commented!");
+          }
+        }
+        let reviewUpdate = await rcol.findOneAndUpdate(
+          { _id: args.reviewId },
+          { $push: { comments: commentObj } },
+          { returnDocument: "after" }
+        );
+
+        if (!reviewUpdate) {
+          throw new GraphQLError("Review not found");
+        }
+        return commentObj;
+      } catch (e) {
+        throw new GraphQLError(e.message);
+      }
     },
   },
 
@@ -361,6 +403,17 @@ export const resolvers = {
       }));
 
       return tracksObj;
+    },
+  },
+  Comment: {
+    user: async (parentValue) => {
+      let ucol = await users();
+      let user = await ucol.findOne({ _id: parentValue.userId });
+      if (!user)
+        throw new GraphQLError(
+          `Failed to find user for review with id: ${parentValue._id}`
+        );
+      return user;
     },
   },
   // type Track {

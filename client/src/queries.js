@@ -20,6 +20,15 @@ const GET_REVIEWS = gql`
         }
         imageUrl
       }
+      comments {
+        _id
+        user {
+          _id
+          email
+          username
+        }
+        text
+      }
     }
   }
 `;
@@ -30,6 +39,15 @@ const GET_REVIEW_BY_ID = gql`
       content
       title
       _id
+      comments {
+        _id
+        user {
+          _id
+          email
+          username
+        }
+        text
+      }
       track {
         _id
         album {
@@ -59,6 +77,15 @@ const GET_USERS = gql`
         _id
         title
         content
+        comments {
+          _id
+          user {
+            _id
+            email
+            username
+          }
+          text
+        }
         track {
           _id
           title
@@ -85,6 +112,15 @@ const GET_USER_BY_ID = gql`
         _id
         title
         content
+        comments {
+          _id
+          user {
+            _id
+            email
+            username
+          }
+          text
+        }
         track {
           _id
           title
@@ -154,6 +190,15 @@ const CREATE_REVIEW = gql`
       }
       title
       content
+      comments {
+        _id
+        user {
+          _id
+          email
+          username
+        }
+        text
+      }
       track {
         _id
         title
@@ -189,6 +234,15 @@ const GET_TRACK_REVIEWS = gql`
       }
       title
       content
+      comments {
+        _id
+        user {
+          _id
+          email
+          username
+        }
+        text
+      }
       track {
         _id
         title
@@ -235,6 +289,19 @@ const GET_ALBUM_BY_ID = gql`
   }
 `;
 
+const CREATE_COMMENT = gql`
+  mutation CreateComment($userId: String!, $reviewId: String!, $text: String!) {
+    createComment(userId: $userId, reviewId: $reviewId, text: $text) {
+      text
+      user {
+        _id
+        email
+        username
+      }
+    }
+  }
+`;
+
 let exported = {
   GET_REVIEWS,
   GET_REVIEW_BY_ID,
@@ -247,6 +314,7 @@ let exported = {
   GET_TRACK_REVIEWS,
   SEARCH_ALBUMS_BY_NAME,
   GET_ALBUM_BY_ID,
+  CREATE_COMMENT,
 };
 
 export default exported;
