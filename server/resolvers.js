@@ -172,8 +172,8 @@ export const resolvers = {
     createUser: async (_, args) => {
       console.log("createUser called with args:", args);
       let ucol = await users();
-      userObj = {
-        _id: args.userId,
+      let userObj = {
+        _id: args.uuid,
         email: args.email,
         username: args.username,
       };
