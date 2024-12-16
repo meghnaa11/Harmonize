@@ -170,7 +170,7 @@ export const resolvers = {
   // }
   Mutation: {
     createUser: async (_, args) => {
-      console.log("createUser called with args:", args);
+      // console.log("createUser called with args:", args);
       let ucol = await users();
       let userObj = {
         _id: args.uuid,
@@ -179,7 +179,7 @@ export const resolvers = {
       };
       let inserted = await ucol.insertOne(userObj);
       if (!inserted) throw new GraphQLError("Failed to create user.");
-      console.log("User successfully inserted:", userObj);
+      // console.log("User successfully inserted:", userObj);
       return userObj;
     },
     createReview: async (_, args) => {
