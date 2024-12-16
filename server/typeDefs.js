@@ -14,6 +14,7 @@ export const typeDefs = `#graphql
     type Mutation {
         createUser(uuid:String!, username: String!, email:String!): User!
         createReview(title:String!, content:String!, userId:String!, trackId:String!): Review!
+        createComment(userId: String!, reviewId: String!, text:String!): Comment!
     }
 
     type User {
@@ -29,6 +30,7 @@ export const typeDefs = `#graphql
         title: String!
         content: String!
         track: Track!
+        comments: [Comment]!
     }
     
     type Track {
@@ -46,5 +48,11 @@ export const typeDefs = `#graphql
         artist: String!
         trackList: [Track!]!
         imageUrl: String!
+    }
+
+    type Comment {
+        _id: String!
+        user: User!
+        text: String!
     }
 `;
