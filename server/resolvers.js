@@ -217,6 +217,14 @@ export const resolvers = {
         );
       }
 
+      let existingReview = await rcol.findOne({
+        userId: args.userId,
+        trackId: args.trackId,
+      });
+      if (existingReview) {
+        throw new GraphQLError("Already reviewed this track!");
+      }
+
       let reviewObj = {
         _id: uuid(),
         title: args.title,
