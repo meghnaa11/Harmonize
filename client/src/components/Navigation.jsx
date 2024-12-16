@@ -7,6 +7,7 @@ import "../App.css";
 
 const Navigation = () => {
   const { currentUser } = useContext(AuthContext);
+  console.log(JSON.stringify(currentUser));
   return <div>{currentUser ? <NavigationAuth /> : <NavigationNonAuth />}</div>;
 };
 
@@ -14,7 +15,7 @@ const NavigationAuth = () => {
   const { currentUser } = useContext(AuthContext);
   return (
     <>
-      <p>You are currently logged in as: {currentUser.displayName}</p>
+      <p>You are currently logged in.</p>
       <nav className="navigation">
         <NavLink className="NavLink" to="/">
           Home
