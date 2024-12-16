@@ -26,6 +26,15 @@ function App() {
     ],
   });
 
+  const [deleteComment] = useMutation(queries.DELETE_COMMENT, {
+    refetchQueries: [
+      {
+        query: queries.GET_REVIEW_BY_ID,
+        variables: { reviewId: id },
+      },
+    ],
+  });
+
   async function addComment(event) {
     event.preventDefault();
     try {
@@ -86,6 +95,19 @@ function App() {
               <li key={comment._id}>
                 <h3>{comment.user.username}</h3>
                 <p>{comment.text}</p>
+                {currentUser.uid === comment.user._id && (
+                  <button
+                    onClick={async () => {
+                      await deleteComment({
+                        variables: {
+                          commentId: comment._id,
+                        },
+                      });
+                    }}
+                  >
+                    Delete
+                  </button>
+                )}
               </li>
             ))}
           </ul>

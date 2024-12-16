@@ -302,6 +302,18 @@ const CREATE_COMMENT = gql`
   }
 `;
 
+const DELETE_COMMENT = gql`
+  mutation DeleteComment($commentId: String!) {
+    deleteComment(commentId: $commentId)
+  }
+`;
+
+const DELETE_REVIEW = gql`
+  mutation DeleteReview($reviewId: String!) {
+    deleteReview(reviewId: $reviewId)
+  }
+`;
+
 let exported = {
   GET_REVIEWS,
   GET_REVIEW_BY_ID,
@@ -315,6 +327,8 @@ let exported = {
   SEARCH_ALBUMS_BY_NAME,
   GET_ALBUM_BY_ID,
   CREATE_COMMENT,
+  DELETE_COMMENT,
+  DELETE_REVIEW,
 };
 
 export default exported;
