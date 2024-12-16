@@ -15,6 +15,8 @@ export const typeDefs = `#graphql
         createUser(uuid:String!, username: String!, email:String!): User!
         createReview(title:String!, content:String!, userId:String!, trackId:String!): Review!
         createComment(userId: String!, reviewId: String!, text:String!): Comment!
+        deleteReview(reviewId: String!): String!
+        deleteComment(commentId: String!): String!
     }
 
     type User {
