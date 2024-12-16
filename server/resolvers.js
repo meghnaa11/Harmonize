@@ -242,19 +242,28 @@ export const resolvers = {
         };
 
         let rcol = await reviews();
+        let review = await rcol.findOne({ _id: args.reviewId });
 
-        let review = await rcol.findOneAndUpdate(
+        if (!review) {
+          throw new GraphQLError("Review not found");
+        }
+        for (let comment of review.comments) {
+          if (args.userId === comment.userId) {
+            throw new GraphQLError("Already Commented!");
+          }
+        }
+        let reviewUpdate = await rcol.findOneAndUpdate(
           { _id: args.reviewId },
           { $push: { comments: commentObj } },
           { returnDocument: "after" }
         );
 
-        if (!review) {
+        if (!reviewUpdate) {
           throw new GraphQLError("Review not found");
         }
         return commentObj;
       } catch (e) {
-        throw new GraphQLError("Failed to add comment.");
+        throw new GraphQLError(e.message);
       }
     },
   },
