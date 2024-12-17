@@ -23,6 +23,9 @@ const NavigationAuth = () => {
         <NavLink className="NavLink" to="/reviews">
           Reviews
         </NavLink>
+        <NavLink className="NavLink" to={`/user/${currentUser.uid}`}>
+          Profile
+        </NavLink>
         <NavLink className="NavLink" to="/createReview">
           Create Review
         </NavLink>
