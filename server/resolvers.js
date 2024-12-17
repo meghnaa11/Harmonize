@@ -43,6 +43,15 @@ export const resolvers = {
         );
       return review;
     },
+    getTrackReviews: async (_, args) => {
+      let rcol = await reviews();
+      let reviewList = await rcol.find({ trackId: args.trackId }).toArray();
+      if (!reviewList)
+        throw new GraphQLError(
+          `Failed to find review with id:${args.reviewId}`
+        );
+      return reviewList;
+    },
     getTrackById: async (_, args) => {
       try {
         let spotifyKey = await getSpotifyAccessToken();
@@ -59,8 +68,8 @@ export const resolvers = {
           _id: trackData.id,
           title: trackData.name,
           artist: trackData.artists[0].name,
-          album: trackData.album.name,
           imageUrl: trackData.album.images[0].url,
+          songUrl: trackData.external_urls.spotify,
         };
         return trackObj;
       } catch (error) {
@@ -87,14 +96,69 @@ export const resolvers = {
           _id: track.id,
           title: track.name,
           artist: track.artists[0].name,
-          album: track.album.name,
           imageUrl: track.album.images[0].url,
+          songUrl: track.external_urls.spotify,
         }));
 
         return tracksObj;
       } catch (error) {
         throw new GraphQLError(
           `Failed to search tracks with name:${args.searchTerm}`
+        );
+      }
+    },
+    getAlbumById: async (_, args) => {
+      try {
+        let spotifyKey = await getSpotifyAccessToken();
+        const response = await axios.get(
+          `https://api.spotify.com/v1/albums/${args.albumId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${spotifyKey}`,
+            },
+          }
+        );
+        let albumData = response.data;
+        let albumObj = {
+          _id: albumData.id,
+          title: albumData.name,
+          artist: albumData.artists[0].name,
+          imageUrl: albumData.images[0].url,
+          trackListUrl: albumData.tracks.href,
+        };
+        return albumObj;
+      } catch (error) {
+        throw new GraphQLError(
+          `Failed to find album with id:${args.albumId}, msg=${error}`
+        );
+      }
+    },
+    searchAlbumsByName: async (_, args) => {
+      let spotifyKey = await getSpotifyAccessToken();
+      try {
+        const response = await axios.get(`https://api.spotify.com/v1/search`, {
+          headers: {
+            Authorization: `Bearer ${spotifyKey}`,
+          },
+          params: {
+            q: args.searchTerm,
+            type: "album",
+          },
+        });
+
+        let albumsData = response.data.albums.items;
+        // console.log(JSON.stringify(albumsData));
+        let albumsObj = albumsData.map((album) => ({
+          _id: album.id,
+          title: album.name,
+          artist: album.artists[0].name,
+          imageUrl: album.images[0].url,
+        }));
+
+        return albumsObj;
+      } catch (error) {
+        throw new GraphQLError(
+          `Failed to search albums with name:${args.searchTerm}`
         );
       }
     },
@@ -106,14 +170,16 @@ export const resolvers = {
   // }
   Mutation: {
     createUser: async (_, args) => {
+      // console.log("createUser called with args:", args);
       let ucol = await users();
-      userObj = {
-        _id: args.userId,
+      let userObj = {
+        _id: args.uuid,
         email: args.email,
         username: args.username,
       };
       let inserted = await ucol.insertOne(userObj);
       if (!inserted) throw new GraphQLError("Failed to create user.");
+      // console.log("User successfully inserted:", userObj);
       return userObj;
     },
     createReview: async (_, args) => {
@@ -151,12 +217,21 @@ export const resolvers = {
         );
       }
 
+      let existingReview = await rcol.findOne({
+        userId: args.userId,
+        trackId: args.trackId,
+      });
+      if (existingReview) {
+        throw new GraphQLError("Already reviewed this track!");
+      }
+
       let reviewObj = {
         _id: uuid(),
         title: args.title,
         content: args.content,
         userId: args.userId,
         trackId: args.trackId,
+        comments: [],
       };
 
       let inserted = await rcol.insertOne(reviewObj);
@@ -165,6 +240,59 @@ export const resolvers = {
           "Could not create review: Internal server error."
         );
       return reviewObj;
+    },
+    deleteReview: async (_, args) => {
+      let rcol = await reviews();
+      let review = await rcol.findOneAndDelete({ _id: args.reviewId });
+      if (!review) {
+        throw new GraphQLError("Review not found");
+      }
+      return "Review deleted successfully.";
+    },
+    createComment: async (_, args) => {
+      try {
+        let commentObj = {
+          _id: uuid(),
+          userId: args.userId,
+          text: args.text,
+        };
+
+        let rcol = await reviews();
+        let review = await rcol.findOne({ _id: args.reviewId });
+
+        if (!review) {
+          throw new GraphQLError("Review not found");
+        }
+        for (let comment of review.comments) {
+          if (args.userId === comment.userId) {
+            throw new GraphQLError("Already Commented!");
+          }
+        }
+        let reviewUpdate = await rcol.findOneAndUpdate(
+          { _id: args.reviewId },
+          { $push: { comments: commentObj } },
+          { returnDocument: "after" }
+        );
+
+        if (!reviewUpdate) {
+          throw new GraphQLError("Review not found");
+        }
+        return commentObj;
+      } catch (e) {
+        throw new GraphQLError(e.message);
+      }
+    },
+    deleteComment: async (_, args) => {
+      let rcol = await reviews();
+      let review = await rcol.findOneAndUpdate(
+        { "comments._id": args.commentId },
+        { $pull: { comments: { _id: args.commentId } } },
+        { returnDocument: "after" }
+      );
+      if (!review) {
+        throw new GraphQLError("Review not found");
+      }
+      return "Comment deleted successfully.";
     },
   },
 
@@ -220,6 +348,7 @@ export const resolvers = {
           artist: trackData.artists[0].name,
           album: trackData.album.name,
           imageUrl: trackData.album.images[0].url,
+          songUrl: trackData.external_urls.spotify,
         };
         return trackObj;
       } catch (error) {
@@ -227,6 +356,84 @@ export const resolvers = {
           `Failed to find track for review with id:${parentValue._id}`
         );
       }
+    },
+  },
+  Track: {
+    album: async (parentValue) => {
+      try {
+        let spotifyKey = await getSpotifyAccessToken();
+        const response = await axios.get(
+          `https://api.spotify.com/v1/tracks/${parentValue._id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${spotifyKey}`,
+            },
+          }
+        );
+        let trackData = response.data;
+        let albumObj = {
+          _id: trackData.album.id,
+          title: trackData.album.name,
+          imageUrl: parentValue.imageUrl,
+          artist: trackData.album.artists[0].name,
+        };
+        return albumObj;
+      } catch (error) {
+        throw new GraphQLError(
+          `Failed to find album for track with id:${parentValue._id}`
+        );
+      }
+    },
+  },
+  Album: {
+    trackList: async (parentValue) => {
+      let spotifyKey = await getSpotifyAccessToken();
+      if (!parentValue.trackListUrl) {
+        try {
+          let spotifyKey = await getSpotifyAccessToken();
+          const response = await axios.get(
+            `https://api.spotify.com/v1/albums/${parentValue._id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${spotifyKey}`,
+              },
+            }
+          );
+          let albumData = response.data;
+          parentValue.trackListUrl = albumData.tracks.href;
+        } catch (error) {
+          throw new GraphQLError(
+            `Failed to find album with id:${args.albumId}, msg=${error}`
+          );
+        }
+      }
+      let response = await axios.get(parentValue.trackListUrl, {
+        headers: {
+          Authorization: `Bearer ${spotifyKey}`,
+        },
+      });
+      let trackList = response.data.items;
+      let tracksObj = trackList.map((track) => ({
+        _id: track.id,
+        title: track.name,
+        artist: track.artists[0].name,
+        album: parentValue.title,
+        imageUrl: parentValue.imageUrl,
+        songUrl: track.external_urls.spotify,
+      }));
+
+      return tracksObj;
+    },
+  },
+  Comment: {
+    user: async (parentValue) => {
+      let ucol = await users();
+      let user = await ucol.findOne({ _id: parentValue.userId });
+      if (!user)
+        throw new GraphQLError(
+          `Failed to find user for review with id: ${parentValue._id}`
+        );
+      return user;
     },
   },
   // type Track {

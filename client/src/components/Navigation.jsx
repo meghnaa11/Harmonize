@@ -2,47 +2,54 @@ import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import SignOutButton from "./SignOut";
+
 import "../App.css";
 
 const Navigation = () => {
   const { currentUser } = useContext(AuthContext);
+  // console.log(JSON.stringify(currentUser));
   return <div>{currentUser ? <NavigationAuth /> : <NavigationNonAuth />}</div>;
 };
 
 const NavigationAuth = () => {
   const { currentUser } = useContext(AuthContext);
   return (
-    <nav className="navigation">
-      <p>You are currently logged in as: {currentUser.displayName}</p>
-      <ul className="NavLinkList">
+    <>
+      <p>You are currently logged in.</p>
+      <nav className="navigation">
         <NavLink className="NavLink" to="/">
           Home
         </NavLink>
         <NavLink className="NavLink" to="/reviews">
           Reviews
         </NavLink>
+        <NavLink className="NavLink" to={`/user/${currentUser.uid}`}>
+          Profile
+        </NavLink>
         <NavLink className="NavLink" to="/createReview">
           Create Review
         </NavLink>
-      </ul>
-      <SignOutButton></SignOutButton>
-    </nav>
+        <NavLink className="NavLink" to="/messages">
+          Messages
+        </NavLink>
+      </nav>
+    </>
   );
 };
 
 const NavigationNonAuth = () => {
   return (
-    <nav className="navigation">
+    <>
       <p>You are currently not logged in.</p>
-      <ul>
-        <li>
-          <NavLink to="/signup">Sign-up</NavLink>
-        </li>
-        <li>
-          <NavLink to="/signin">Sign-In</NavLink>
-        </li>
-      </ul>
-    </nav>
+      <nav className="navigation">
+        <NavLink to="/signup" className="NavLink">
+          Sign-up
+        </NavLink>
+        <NavLink to="/signin" className="NavLink">
+          Sign-In
+        </NavLink>
+      </nav>
+    </>
   );
 };
 

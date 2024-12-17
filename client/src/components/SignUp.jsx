@@ -2,25 +2,40 @@ import React, { useContext, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { doCreateUserWithEmailAndPassword } from "../firebase/FirebaseFunctions";
 import { AuthContext } from "../context/AuthContext";
+import { useMutation } from "@apollo/client";
+import queries from "../queries";
+
 function SignUp() {
   const { currentUser } = useContext(AuthContext);
   const [pwMatch, setPwMatch] = useState("");
+  const [createUser, { loading, error }] = useMutation(queries.CREATE_USER);
+
   const handleSignUp = async (e) => {
     e.preventDefault();
     const { displayName, email, passwordOne, passwordTwo } = e.target.elements;
+
     if (passwordOne.value !== passwordTwo.value) {
       setPwMatch("Passwords do not match");
       return false;
     }
 
     try {
-      await doCreateUserWithEmailAndPassword(
+      const user = await doCreateUserWithEmailAndPassword(
         email.value,
         passwordOne.value,
         displayName.value
       );
+      // console.log(JSON.stringify(user));
+      await createUser({
+        variables: {
+          uuid: user.uid,
+          username: displayName.value,
+          email: email.value,
+        },
+      });
+      alert("User successfully created!");
     } catch (error) {
-      alert(error);
+      alert("Error signing up: " + error.message);
     }
   };
 
@@ -32,6 +47,7 @@ function SignUp() {
     <div className="card">
       <h1>Sign up</h1>
       {pwMatch && <h4 className="error">{pwMatch}</h4>}
+      {error && <h4 className="error">{error.message}</h4>}
       <form onSubmit={handleSignUp}>
         <div className="form-group">
           <label>
@@ -94,8 +110,9 @@ function SignUp() {
           id="submitButton"
           name="submitButton"
           type="submit"
+          disabled={loading}
         >
-          Sign Up
+          {loading ? "Signing up..." : "Sign Up"}
         </button>
       </form>
       <br />
