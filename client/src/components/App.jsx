@@ -14,6 +14,8 @@ import CreateReview from "./CreateReview";
 import { AuthProvider } from "../context/AuthContext";
 import SignOutButton from "./SignOut";
 import PrivateRoute from "./PrivateRoute";
+import Messages from "./Messages";
+
 
 function App() {
   return (
@@ -44,6 +46,9 @@ function App() {
           </Route>
           <Route path="/createReview" element={<PrivateRoute />}>
             <Route path="/createReview" element={<CreateReview />} />
+          </Route>
+          <Route path="/messages" element={<PrivateRoute />}>
+            <Route path="/messages" element={<Messages />} />
           </Route>
         </Routes>
         <SignOutButton></SignOutButton>

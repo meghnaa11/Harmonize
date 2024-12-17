@@ -17,29 +17,33 @@ function User() {
 
   return (
     <div className="user-profile">
-      <h1>{username}'s Profile</h1>
-      <p><strong>Email:</strong> {email}</p>
-
-      <h2>Reviews</h2>
-      {reviews.length > 0 ? (
-        reviews.map((review) => (
-          <div key={review._id} className="review">
-            <h3>{review.title}</h3>
-            <p>{review.content}</p>
-            <p>
-              <strong>Track:</strong> {review.track.title} by {review.track.artist}
-            </p>
-            <img
-              src={review.track.imageUrl}
-              alt={review.track.title}
-              width="200"
-            />
-          </div>
-        ))
-      ) : (
-        <p>No reviews yet.</p>
-      )}
-    </div>
+   <div className="profile-header">
+        <h1>{username}'s Profile</h1>
+        <p><strong>Email:</strong> {email}</p>
+      </div>
+  
+  <div className="reviews">
+    <h2>Reviews</h2>
+    {reviews.length > 0 ? (
+      reviews.map((review) => (
+        <div key={review._id} className="reviewCard">
+          <h3>{review.title}</h3>
+          <p>{review.content}</p>
+          <p>
+            <strong>Track:</strong> {review.track.title} by {review.track.artist}
+          </p>
+          <img
+            src={review.track.imageUrl}
+            alt={review.track.title}
+            className="art"
+          />
+        </div>
+      ))
+    ) : (
+      <p>No reviews yet.</p>
+    )}
+  </div>
+</div>
   );
 }
 

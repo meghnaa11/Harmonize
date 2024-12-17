@@ -29,6 +29,9 @@ const NavigationAuth = () => {
         <NavLink className="NavLink" to="/createReview">
           Create Review
         </NavLink>
+        <NavLink className="NavLink" to="/messages">
+          Messages
+        </NavLink>
       </nav>
     </>
   );
