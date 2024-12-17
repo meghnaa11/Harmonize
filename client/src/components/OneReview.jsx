@@ -134,7 +134,12 @@ function App() {
           <a href={review.track.songUrl} className="link" target="_blank">
             <br></br>Listen here!
           </a>
-          <h4>A review by {review.user.username}</h4>
+          <h4>
+            A review by{" "}
+            <NavLink to={`/user/${review.user._id}`} className="link">
+              {review.user.username}
+            </NavLink>
+          </h4>
           <p>Review Text: {review.content}</p>
         </div>
         <div className="reviewCard">
@@ -146,7 +151,11 @@ function App() {
           <ul className="commentList">
             {review.comments.map((comment) => (
               <li key={comment._id}>
-                <h3>{comment.user.username}</h3>
+                <h3>
+                  <NavLink to={`/user/${comment.user._id}`} className="link">
+                    {comment.user.username}
+                  </NavLink>
+                </h3>
                 <p>{comment.text}</p>
                 {currentUser.uid === comment.user._id && (
                   <button

@@ -24,7 +24,11 @@ function App() {
               <div>
                 <h2>
                   <NavLink to={`/reviews/${review._id}`} className="link">
-                    "{review.title}" - {review.user.username}
+                    "{review.title}"
+                  </NavLink>
+                  -{" "}
+                  <NavLink to={`/user/${review.user._id}`} className="link">
+                    {review.user.username}
                   </NavLink>
                 </h2>
                 <h3>
