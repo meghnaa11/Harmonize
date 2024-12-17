@@ -60,7 +60,7 @@ io.on("connection", (socket) => {
 });
 
 const PORT = 4000;
-httpServer.listen(PORT, () => {
+httpServer.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server ready at: http://localhost:${PORT}/graphql`);
   console.log(`🔌 Socket.io listening on: http://localhost:${PORT}`);
 });
