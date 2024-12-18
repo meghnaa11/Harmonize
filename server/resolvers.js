@@ -4,7 +4,7 @@ import axios from "axios";
 import getSpotifyAccessToken from "./auth.js";
 import * as v from "./validation.js";
 import { v4 as uuid } from "uuid";
-import { indexSongs, searchSongs } from "./search/index.js";
+import { indexSongs, searchSongs, indexAlbums, searchAlbums } from "./search/index.js";
 
 export const resolvers = {
   // type Query {
@@ -147,13 +147,18 @@ export const resolvers = {
     },
     searchAlbumsByName: async (_, args) => {
       let spotifyKey = await getSpotifyAccessToken();
+      const searchTerm =  args.searchTerm
       try {
+        const indextedAlbums = await searchAlbums(searchTerm)
+        if(indextedAlbums && indextedAlbums.length > 0){
+          return indextedAlbums
+        }
         const response = await axios.get(`https://api.spotify.com/v1/search`, {
           headers: {
             Authorization: `Bearer ${spotifyKey}`,
           },
           params: {
-            q: args.searchTerm,
+            q: searchTerm,
             type: "album",
           },
         });
@@ -166,6 +171,8 @@ export const resolvers = {
           artist: album.artists[0].name,
           imageUrl: album.images[0].url,
         }));
+
+        await indexAlbums(albumsObj)
 
         return albumsObj;
       } catch (error) {

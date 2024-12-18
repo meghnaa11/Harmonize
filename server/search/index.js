@@ -114,4 +114,68 @@ const indexSongs = async (songs) => {
 // const result =  await searchSongs('rolling')
 // console.log(result)
 
-export {indexSongs, searchSongs}
+const indexAlbums = async (albums) => {
+  try {
+    for (const album of albums) {
+      const response = await client.index({
+        index: 'albums',
+        id: album._id,
+        document: {
+          title: album.title,
+          artist: album.artist,
+          imageUrl: album.imageUrl
+        }
+      });
+      console.log(`Indexed album: ${album.title}`, response);
+    }
+
+    await client.indices.refresh({ index: 'albums' });
+
+    console.log('All albums indexed successfully!');
+    return true;
+  } catch (error) {
+    console.error('Error indexing albums:', error);
+    throw error;
+  }
+};
+
+const searchAlbums = async (searchTerm) => {
+  try {
+    const response = await client.search({
+      index: 'albums',
+      body: {
+        query: {
+          multi_match: {
+            query: searchTerm,
+            fields: ['title', 'artist']
+          }
+        }
+      }
+    });
+
+    console.log(`Search response for term '${searchTerm}':`, response);
+
+    const hits = response.hits.hits;
+    if (hits.length > 0) {
+      const searchResults = hits.map(hit => ({
+        _id: hit._id,
+        title: hit._source.title,
+        artist: hit._source.artist,
+        imageUrl: hit._source.imageUrl
+      }));
+
+      console.log(`Found ${hits.length} albums for term '${searchTerm}'.`);
+      return searchResults;
+    } else {
+      console.log(`No albums found matching term '${searchTerm}'.`);
+      return [];
+    }
+  } catch (error) {
+    console.error(`Error searching for albums with term '${searchTerm}':`, error);
+    // throw error;
+    return []
+  }
+};
+
+
+export {indexSongs, searchSongs,  indexAlbums, searchAlbums}
