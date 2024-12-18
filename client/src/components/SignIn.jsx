@@ -70,13 +70,15 @@ function SignIn() {
             </label>
           </div>
 
-          <button className="button NavLink" type="submit">
-            Log in
-          </button>
-
-          <button className="forgotPassword NavLink" onClick={passwordReset}>
-            Forgot Password
-          </button>
+        <div className="text-center">
+            <button className="button NavLink background-green" style={{width: '100%', maxWidth: '400px'}} type="submit">
+              Log in
+            </button>
+            <br />
+            <button className="forgotPassword NavLink" style={{ 'marginTop': '0px' }} onClick={passwordReset}>
+              Forgot Password
+            </button>
+          </div>
         </form>
 
         <br />

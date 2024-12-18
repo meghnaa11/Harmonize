@@ -23,3 +23,11 @@ Ensure you have the following installed:
 2. **Start the Application with Docker Compose Build and run the application using Docker Compose:**
 
 ```docker-compose up --build```
+
+3. **Seed the server**
+
+Run ```docker ps```
+
+and get the container id for harmonize-server. Then run
+
+Run ```docker exec <Container_ID>  npm run seed```
