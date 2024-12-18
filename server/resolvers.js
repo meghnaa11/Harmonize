@@ -4,6 +4,7 @@ import axios from "axios";
 import getSpotifyAccessToken from "./auth.js";
 import * as v from "./validation.js";
 import { v4 as uuid } from "uuid";
+import { indexSongs, searchSongs } from "./search/index.js";
 
 export const resolvers = {
   // type Query {
@@ -80,13 +81,19 @@ export const resolvers = {
     },
     searchTracksByName: async (_, args) => {
       let spotifyKey = await getSpotifyAccessToken();
+      const searchTerm =  args.searchTerm
       try {
+        const indexedSongs = searchSongs(searchTerm)
+        // console.log('Songs: ' + indexedSongs)
+        if(indexedSongs.length > 0){
+          return indexedSongs
+        }
         const response = await axios.get(`https://api.spotify.com/v1/search`, {
           headers: {
             Authorization: `Bearer ${spotifyKey}`,
           },
           params: {
-            q: args.searchTerm,
+            q: searchTerm,
             type: "track",
           },
         });
@@ -99,6 +106,10 @@ export const resolvers = {
           imageUrl: track.album.images[0].url,
           songUrl: track.external_urls.spotify,
         }));
+
+        // console.log(tracksObj)
+        await indexSongs(tracksObj)
+        console.log('Indexex')
 
         return tracksObj;
       } catch (error) {

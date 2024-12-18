@@ -13,15 +13,15 @@ const fullPath = resolve('search/config/http_ca.crt')
 
 
 const client = new Client({
-    node: 'https://localhost:9200',
+    node: 'http://es01:9200',
     auth: {
       username: 'elastic',
       password: process.env.ELASTIC_SEARCH_PASSWORD
     },
-    tls: {
-      ca: readFileSync(fullPath),
-      rejectUnauthorized: false
-    }
+    // tls: {
+    //   ca: readFileSync(fullPath),
+    //   rejectUnauthorized: false
+    // }
 });
 
 //  (async () => {
@@ -59,10 +59,12 @@ const indexSongs = async (songs) => {
         query: {
           multi_match: {
             query: searchTerm,
-            fields: ['name', 'artist', 'album', 'genre'],
+            fields: ['title', 'artist', 'album'],
           },
         },
       })
+
+      console.log(response)
   
       if (response.hits.total.value > 0) {
         let searchResult = {result: response.hits.total.value, data: []}
@@ -79,6 +81,7 @@ const indexSongs = async (songs) => {
         return searchResult
       } else {
         console.log('No songs found matching your search term.');
+        return []
       }
     } catch (error) {
       console.error('Error searching for songs:', error);
@@ -87,11 +90,12 @@ const indexSongs = async (songs) => {
 
 //   console.log(resolve("search/seed.json"))
 
-  const songs = JSON.parse(fs.readFileSync('search/seed.json', 'utf-8'));
+  // const songs = JSON.parse(fs.readFileSync('search/seed.json', 'utf-8'));
 
 
 //   await indexSongs(songs)
 
-const result =  await searchSongs('rolling')
-console.log(result)
+// const result =  await searchSongs('rolling')
+// console.log(result)
 
+export {indexSongs, searchSongs}
