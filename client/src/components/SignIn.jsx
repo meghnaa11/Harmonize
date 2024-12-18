@@ -36,7 +36,7 @@ function SignIn() {
   }
   return (
     <div>
-      <div className="card">
+      <div className="card text-center">
         <h1>Sign-In</h1>
         <form className="form" onSubmit={handleLogin}>
           <div className="form-group">
@@ -44,6 +44,7 @@ function SignIn() {
               Email Address:
               <br />
               <input
+                className="text-input"
                 name="email"
                 id="email"
                 type="email"
@@ -59,6 +60,7 @@ function SignIn() {
               Password:
               <br />
               <input
+                className="text-input"
                 name="password"
                 type="password"
                 placeholder="Password"
@@ -68,11 +70,11 @@ function SignIn() {
             </label>
           </div>
 
-          <button className="button" type="submit">
+          <button className="button NavLink" type="submit">
             Log in
           </button>
 
-          <button className="forgotPassword" onClick={passwordReset}>
+          <button className="forgotPassword NavLink" onClick={passwordReset}>
             Forgot Password
           </button>
         </form>
