@@ -83,9 +83,10 @@ export const resolvers = {
       let spotifyKey = await getSpotifyAccessToken();
       const searchTerm =  args.searchTerm
       try {
-        const indexedSongs = searchSongs(searchTerm)
+        const indexedSongs = await searchSongs(searchTerm)
         // console.log('Songs: ' + indexedSongs)
-        if(indexedSongs.length > 0){
+        if(indexedSongs && indexedSongs.length > 0){
+          console.log('Sending from index')
           return indexedSongs
         }
         const response = await axios.get(`https://api.spotify.com/v1/search`, {

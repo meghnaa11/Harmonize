@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
   client:
     build: ./client
@@ -11,6 +12,8 @@ services:
       - NODE_ENV=development
     depends_on:
       - server
+    networks:
+      - backend
 
   server:
     build: ./server
@@ -26,6 +29,8 @@ services:
     depends_on:
       - mongo
       - es01
+    networks:
+      - backend
 
   mongo:
     image: mongo
@@ -33,21 +38,33 @@ services:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
+    networks:
+      - backend
 
   es01:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
     environment:
       - discovery.type=single-node
     ports:
       - "9200:9200"
     volumes:
       - es-data:/usr/share/elasticsearch/data
+    deploy:
+      resources:
+        limits:
+          memory: 2g
     healthcheck:
       test: ["CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 5
+    networks:
+      - backend
 
 volumes:
   mongo-data:
   es-data:
+
+networks:
+  backend:
+    driver: bridge

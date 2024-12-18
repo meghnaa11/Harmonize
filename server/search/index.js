@@ -16,13 +16,26 @@ const client = new Client({
     node: 'http://es01:9200',
     auth: {
       username: 'elastic',
-      password: process.env.ELASTIC_SEARCH_PASSWORD
+      // password: process.env.ELASTIC_SEARCH_PASSWORD
+      password: "changeme"
     },
     // tls: {
     //   ca: readFileSync(fullPath),
     //   rejectUnauthorized: false
     // }
 });
+
+// console.log(await client.info())
+// async function checkConnection() {
+//   try {
+//     const response = await client.info();
+//     console.log('Elasticsearch info:', response);
+//   } catch (error) {
+//     console.error('Elasticsearch connection error:', error);
+//   }
+// }
+
+// checkConnection();
 
 //  (async () => {
 //     try {
@@ -38,9 +51,15 @@ const indexSongs = async (songs) => {
       for (const song of songs) {
         const response = await client.index({
           index: 'songs', 
-          document: song
+          id: song._id,  
+          document: {
+              title: song.title,
+              artist: song.artist,
+              imageUrl: song.imageUrl,
+              songUrl: song.songUrl
+          }
         });
-        console.log(`Indexed song: ${song.name}`, response.result)
+        console.log(`Indexed song: ${song.title}`, response.result)
       }
         
       await client.indices.refresh({ index: 'songs' })
@@ -54,31 +73,28 @@ const indexSongs = async (songs) => {
 
   const searchSongs = async (searchTerm) => {
     try {
-      const response = await client.search({
-        index: 'songs', 
-        query: {
-          multi_match: {
-            query: searchTerm,
-            fields: ['title', 'artist', 'album'],
+        const response = await client.search({
+          index: 'songs', 
+          query: {
+            multi_match: {
+              query: searchTerm,
+              fields: ['title', 'artist'],
+            },
           },
-        },
-      })
-
-      console.log(response)
-  
-      if (response.hits.total.value > 0) {
-        let searchResult = {result: response.hits.total.value, data: []}
-        response.hits.hits.forEach((hit, index) => {
-            searchResult.data.push({
-                name: hit._source.name,
-                artist: hit._source.artist,
-                album: hit._source.album,
-                year_released: hit._source.year_released,
-                duration: hit._source.duration,
-                genre: hit._source.genre
-            })
         })
-        return searchResult
+
+        console.log(response)
+    
+        const hits = response.hits.hits;
+        if (hits.length > 0) {
+            const searchResults = hits.map(hit => ({
+                _id: hit._id,
+                title: hit._source.title,
+                artist: hit._source.artist,
+                imageUrl: hit._source.imageUrl,
+                songUrl: hit._source.songUrl
+            }));
+        return searchResults
       } else {
         console.log('No songs found matching your search term.');
         return []
