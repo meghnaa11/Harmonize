@@ -13,16 +13,29 @@ const fullPath = resolve('search/config/http_ca.crt')
 
 
 const client = new Client({
-    node: 'https://localhost:9200',
+    node: 'http://es01:9200',
     auth: {
       username: 'elastic',
-      password: process.env.ELASTIC_SEARCH_PASSWORD
+      // password: process.env.ELASTIC_SEARCH_PASSWORD
+      password: "changeme"
     },
-    tls: {
-      ca: readFileSync(fullPath),
-      rejectUnauthorized: false
-    }
+    // tls: {
+    //   ca: readFileSync(fullPath),
+    //   rejectUnauthorized: false
+    // }
 });
+
+// console.log(await client.info())
+// async function checkConnection() {
+//   try {
+//     const response = await client.info();
+//     console.log('Elasticsearch info:', response);
+//   } catch (error) {
+//     console.error('Elasticsearch connection error:', error);
+//   }
+// }
+
+// checkConnection();
 
 //  (async () => {
 //     try {
@@ -38,9 +51,15 @@ const indexSongs = async (songs) => {
       for (const song of songs) {
         const response = await client.index({
           index: 'songs', 
-          document: song
+          id: song._id,  
+          document: {
+              title: song.title,
+              artist: song.artist,
+              imageUrl: song.imageUrl,
+              songUrl: song.songUrl
+          }
         });
-        console.log(`Indexed song: ${song.name}`, response.result)
+        console.log(`Indexed song: ${song.title}`, response.result)
       }
         
       await client.indices.refresh({ index: 'songs' })
@@ -54,31 +73,31 @@ const indexSongs = async (songs) => {
 
   const searchSongs = async (searchTerm) => {
     try {
-      const response = await client.search({
-        index: 'songs', 
-        query: {
-          multi_match: {
-            query: searchTerm,
-            fields: ['name', 'artist', 'album', 'genre'],
+        const response = await client.search({
+          index: 'songs', 
+          query: {
+            multi_match: {
+              query: searchTerm,
+              fields: ['title', 'artist'],
+            },
           },
-        },
-      })
-  
-      if (response.hits.total.value > 0) {
-        let searchResult = {result: response.hits.total.value, data: []}
-        response.hits.hits.forEach((hit, index) => {
-            searchResult.data.push({
-                name: hit._source.name,
-                artist: hit._source.artist,
-                album: hit._source.album,
-                year_released: hit._source.year_released,
-                duration: hit._source.duration,
-                genre: hit._source.genre
-            })
         })
-        return searchResult
+
+        console.log(response)
+    
+        const hits = response.hits.hits;
+        if (hits.length > 0) {
+            const searchResults = hits.map(hit => ({
+                _id: hit._id,
+                title: hit._source.title,
+                artist: hit._source.artist,
+                imageUrl: hit._source.imageUrl,
+                songUrl: hit._source.songUrl
+            }));
+        return searchResults
       } else {
         console.log('No songs found matching your search term.');
+        return []
       }
     } catch (error) {
       console.error('Error searching for songs:', error);
@@ -87,11 +106,76 @@ const indexSongs = async (songs) => {
 
 //   console.log(resolve("search/seed.json"))
 
-  const songs = JSON.parse(fs.readFileSync('search/seed.json', 'utf-8'));
+  // const songs = JSON.parse(fs.readFileSync('search/seed.json', 'utf-8'));
 
 
 //   await indexSongs(songs)
 
-const result =  await searchSongs('rolling')
-console.log(result)
+// const result =  await searchSongs('rolling')
+// console.log(result)
 
+const indexAlbums = async (albums) => {
+  try {
+    for (const album of albums) {
+      const response = await client.index({
+        index: 'albums',
+        id: album._id,
+        document: {
+          title: album.title,
+          artist: album.artist,
+          imageUrl: album.imageUrl
+        }
+      });
+      console.log(`Indexed album: ${album.title}`, response);
+    }
+
+    await client.indices.refresh({ index: 'albums' });
+
+    console.log('All albums indexed successfully!');
+    return true;
+  } catch (error) {
+    console.error('Error indexing albums:', error);
+    throw error;
+  }
+};
+
+const searchAlbums = async (searchTerm) => {
+  try {
+    const response = await client.search({
+      index: 'albums',
+      body: {
+        query: {
+          multi_match: {
+            query: searchTerm,
+            fields: ['title', 'artist']
+          }
+        }
+      }
+    });
+
+    console.log(`Search response for term '${searchTerm}':`, response);
+
+    const hits = response.hits.hits;
+    if (hits.length > 0) {
+      const searchResults = hits.map(hit => ({
+        _id: hit._id,
+        title: hit._source.title,
+        artist: hit._source.artist,
+        imageUrl: hit._source.imageUrl
+      }));
+
+      console.log(`Found ${hits.length} albums for term '${searchTerm}'.`);
+      return searchResults;
+    } else {
+      console.log(`No albums found matching term '${searchTerm}'.`);
+      return [];
+    }
+  } catch (error) {
+    console.error(`Error searching for albums with term '${searchTerm}':`, error);
+    // throw error;
+    return []
+  }
+};
+
+
+export {indexSongs, searchSongs,  indexAlbums, searchAlbums}

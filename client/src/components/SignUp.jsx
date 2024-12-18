@@ -44,7 +44,7 @@ function SignUp() {
   }
 
   return (
-    <div className="card">
+    <div className="card text-center">
       <h1>Sign up</h1>
       {pwMatch && <h4 className="error">{pwMatch}</h4>}
       {error && <h4 className="error">{error.message}</h4>}
@@ -54,7 +54,7 @@ function SignUp() {
             Username:
             <br />
             <input
-              className="form-control"
+              className="form-control text-input"
               required
               name="displayName"
               type="text"
@@ -63,12 +63,12 @@ function SignUp() {
             />
           </label>
         </div>
-        <div className="form-group">
+        <div className="form-group ">
           <label>
             Email:
             <br />
             <input
-              className="form-control"
+              className="form-control text-input"
               required
               name="email"
               type="email"
@@ -81,7 +81,7 @@ function SignUp() {
             Password:
             <br />
             <input
-              className="form-control"
+              className="form-control text-input"
               id="passwordOne"
               name="passwordOne"
               type="password"
@@ -96,7 +96,7 @@ function SignUp() {
             Confirm Password:
             <br />
             <input
-              className="form-control"
+              className="form-control text-input"
               name="passwordTwo"
               type="password"
               placeholder="Confirm Password"
@@ -106,7 +106,8 @@ function SignUp() {
           </label>
         </div>
         <button
-          className="button"
+          className="button NavLink background-green"
+          style={{width: '100%', maxWidth: '400px', 'marginTop': '15px'}}
           id="submitButton"
           name="submitButton"
           type="submit"
