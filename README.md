@@ -20,7 +20,7 @@ Ensure you have the following installed:
    git clone https://github.com/your-username/harmonize.git
    cd harmonize```
 
-2. **Start the Application with Docker Compose Build and run the application using Docker Compose:**
+2. **Start the Application with Docker Compose Build and run the application using Docker Compose. In the terminal type the following commands:**
 
 ```docker-compose up --build```
 
@@ -31,3 +31,5 @@ Run ```docker ps```
 and get the container id for harmonize-server. Then run
 
 Run ```docker exec <Container_ID>  npm run seed```
+
+Ideally have a two terminal setup in vs code. In one terminal Docker is running, and the second terminal is used for communicating with the Docker instances
