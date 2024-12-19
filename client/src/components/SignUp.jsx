@@ -44,7 +44,8 @@ function SignUp() {
   }
 
   return (
-    <div className="card text-center">
+    <div className="center">
+    <div className="formCard text-center w-80">
       <h1>Sign up</h1>
       {pwMatch && <h4 className="error">{pwMatch}</h4>}
       {error && <h4 className="error">{error.message}</h4>}
@@ -117,6 +118,7 @@ function SignUp() {
         </button>
       </form>
       <br />
+    </div>
     </div>
   );
 }

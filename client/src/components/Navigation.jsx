@@ -15,7 +15,7 @@ const NavigationAuth = () => {
   const { currentUser } = useContext(AuthContext);
   return (
     <>
-      <p>You are currently logged in.</p>
+      {/* <p>You are currently logged in.</p> */}
       <nav className="navigation">
         <NavLink className="NavLink" to="/">
           Home
@@ -32,6 +32,8 @@ const NavigationAuth = () => {
         <NavLink className="NavLink" to="/messages">
           Messages
         </NavLink>
+
+        <SignOutButton></SignOutButton>
       </nav>
     </>
   );
@@ -40,7 +42,7 @@ const NavigationAuth = () => {
 const NavigationNonAuth = () => {
   return (
     <>
-      <p>You are currently not logged in.</p>
+      {/* <p>You are currently not logged in.</p> */}
       <nav className="navigation">
         <NavLink to="/signup" className="NavLink">
           Sign-up

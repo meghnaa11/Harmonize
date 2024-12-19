@@ -144,9 +144,9 @@ function App() {
         </div>
         <div className="reviewCard">
           <h4>Comments</h4>
-          <form onSubmit={addComment}>
+          <form onSubmit={addComment} className="form-container">
             <input type="text" placeholder="Write a comment." id="comment" />
-            <button type="submit">Post</button>
+            <button type="submit" className="NavLink my-5">Post</button>
           </form>
           <ul className="commentList">
             {review.comments.map((comment) => (

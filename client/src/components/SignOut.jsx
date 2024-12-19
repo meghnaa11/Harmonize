@@ -12,7 +12,7 @@ const SignOutButton = () => {
   }
   if (currentUser) {
     return (
-      <button className="signOutButton" type="button" onClick={innerSignOut}>
+      <button className="NavLink" type="button" onClick={innerSignOut}>
         Sign Out
       </button>
     );
