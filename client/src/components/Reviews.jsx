@@ -1,11 +1,21 @@
-import React from "react";
+import React, {useState} from "react";
 import "../App.css";
 import { useQuery } from "@apollo/client";
 import queries from "../queries";
 import { NavLink } from "react-router-dom";
+import SpotifyPlayer from "./SpotifyPlayer";
 
 function App() {
   const { loading, error, data } = useQuery(queries.GET_REVIEWS);
+  const [currentPlaying, setCurrentPlaying] = useState(null);
+
+  const handlePlayToggle = (trackId) => {
+    if (currentPlaying === trackId) {
+      setCurrentPlaying(null)
+    } else {
+      setCurrentPlaying(trackId)
+    }
+  };
 
   let body = null;
   if (loading) {
@@ -38,12 +48,15 @@ function App() {
                   </NavLink>{" "}
                   by {review.track.artist}
                 </h3>
+                {/* {console.log(review.track.songUrl)} */}
                 <a href={review.track.songUrl} className="link" target="_blank">
                   <br />
-                  Listen here!
+                  Listen to the full song!
                 </a>
               </div>
-              <img src={review.track.imageUrl} className="art" />
+              {/* <img src={review.track.imageUrl} className="art" /> */}
+
+              <SpotifyPlayer songUrl={review.track.songUrl} play={currentPlaying === review.track._id} onPlay={() => console.log('Track playing')}/>
             </li>
           ))}
         </ul>

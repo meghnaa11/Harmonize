@@ -35,8 +35,8 @@ function SignIn() {
     return <Navigate to="/" />;
   }
   return (
-    <div>
-      <div className="card text-center">
+    <div className="center">
+      <div className="formCard text-center w-80">
         <h1>Sign-In</h1>
         <form className="form" onSubmit={handleLogin}>
           <div className="form-group">
@@ -71,7 +71,7 @@ function SignIn() {
           </div>
 
         <div className="text-center">
-            <button className="button NavLink background-green" style={{width: '100%', maxWidth: '400px'}} type="submit">
+            <button className="NavLink background-green my-10" style={{width: '100%', maxWidth: '400px'}} type="submit">
               Log in
             </button>
             <br />

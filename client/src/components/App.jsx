@@ -1,6 +1,6 @@
 import React from "react";
 import "../App.css";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, NavLink } from "react-router-dom";
 import Navigation from "./Navigation";
 import SignIn from "./SignIn";
 import SignUp from "./SignUp";
@@ -22,9 +22,12 @@ function App() {
     <AuthProvider>
       <div className="App">
         <header className="App-header">
-          <h1 className="AppTitle">HARMONIZE</h1>
+        <NavLink to="/" className="AppTitleLink">
+            <h1 className="AppTitle">HARMONIZE</h1>
+          </NavLink>
           <Navigation />
         </header>
+        <div className="container">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/signin" element={<SignIn />} />
@@ -51,7 +54,7 @@ function App() {
             <Route path="/messages" element={<Messages />} />
           </Route>
         </Routes>
-        <SignOutButton></SignOutButton>
+        </div>
       </div>
     </AuthProvider>
   );

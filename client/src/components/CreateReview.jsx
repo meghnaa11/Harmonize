@@ -103,7 +103,7 @@ const CreateReview = () => {
   if (trackData) {
     let { searchTracksByName: tracks } = trackData;
     dropdown = (
-      <select id="dropdown">
+      <select id="dropdown" style={{maxWidth: '515px'}}>
         {tracks.map((track) => (
           <option key={track._id} value={track._id}>
             "{track.title}" by {track.artist}
@@ -113,7 +113,7 @@ const CreateReview = () => {
     );
   } else if (trackError) {
     dropdown = (
-      <select id="dropdown">
+      <select id="dropdown" style={{maxWidth: '515px'}}>
         <option value={defaultTrackId}>
           "{defaultTrackTitle}" by {defaultTrackArtist}
         </option>
@@ -131,30 +131,30 @@ const CreateReview = () => {
   return (
     <>
       <h2 className="subtitle">Create a Review</h2>
-      <div className="formCard">
+      <div className="formCard text-center">
         <form onSubmit={handleSearch}>
           <label htmlFor="trackSearch">
-            Track:
+            {/* Track: */}
             <br />
-            <input id="trackSearch" defaultValue={defaultTrackTitle} />
+            <input id="trackSearch" defaultValue={defaultTrackTitle} placeholder="Search By Artist/Song/Album" className="text-input my-10" />
           </label>
-          <button id="search" type="submit">
+          <button id="search" type="submit" className="NavLink" style={{marginLeft: '10px'}}>
             Search!
           </button>
         </form>
         <form onSubmit={handleSubmit}>
           {dropdown} <br />
           <label htmlFor="reviewTitle">
-            Title: <br></br>
-            <input id="reviewTitle" />
+            {/* Title: <br></br> */}
+            <input id="reviewTitle" className="my-5" placeholder='Enter title of your review' style={{marginTop: "30px"}}/>
           </label>{" "}
           <br />
           <label htmlFor="reviewTitle">
-            Content:<br></br>
-            <textarea id="reviewContent" />
+            {/* Content:<br></br> */}
+            <textarea id="reviewContent" placeholder='Enter comment' className="my-5"/>
           </label>{" "}
           <br />
-          <button type="submit">Post!</button>
+          <button type="submit" className="NavLink my-5">Post!</button>
         </form>
       </div>
     </>
